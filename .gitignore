@@ -1,0 +1,4 @@
+*.iml
+*.g.dart
+.dart_tool/
+.packages

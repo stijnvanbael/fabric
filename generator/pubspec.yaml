@@ -1,0 +1,20 @@
+name: fabric_generator
+description: Generator for Fabric
+version: 0.0.1
+
+environment:
+  sdk: '>=2.14.4 <3.0.0'
+
+dependencies:
+  build: ^2.3.0
+  source_gen: ^1.2.2
+  merging_builder: ^0.2.3
+  analyzer: ^2.7.0
+  fabric_manager:
+    path: ../manager
+  fabric_metadata:
+    path: ../metadata
+
+dev_dependencies:
+  lints: ^1.0.0
+  test: ^1.16.0

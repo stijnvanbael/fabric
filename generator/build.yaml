@@ -1,0 +1,21 @@
+targets:
+  $default:
+    builders:
+      fabric_generator|fabric:
+        enabled: true
+
+builders:
+  fabric_lib_generator:
+    import: "package:fabric_generator/fabric_generator.dart"
+    builder_factories: [ "fabricLibBuilder" ]
+    build_extensions:
+      "lib/$lib$": [ "lib/fabric.g.dart" ]
+    auto_apply: root_package
+    build_to: source
+  fabric_test_generator:
+    import: "package:fabric_generator/fabric_generator.dart"
+    builder_factories: [ "fabricTestBuilder" ]
+    build_extensions:
+      "test/$package$": [ "test/fabric.g.dart" ]
+    auto_apply: root_package
+    build_to: source
