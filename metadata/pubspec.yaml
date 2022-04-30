@@ -9,7 +9,5 @@ dev_dependencies:
   lints: ^1.0.0
   test: ^1.16.0
   build_runner: ^2.1.10
-  fabric_generator:
-    path: ../generator
-  fabric_manager:
-    path: ../manager
+  fabric_generator: ^0.0.1
+  fabric_manager: ^0.0.1
