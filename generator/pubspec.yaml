@@ -1,6 +1,7 @@
 name: fabric_generator
 description: Generator for Fabric
 version: 0.0.1
+repository: https://github.com/stijnvanbael/fabric/tree/master/generator
 
 environment:
   sdk: '>=2.14.4 <3.0.0'

@@ -1,6 +1,7 @@
 name: fabric_metadata
 description: Metadata for Fabric
 version: 0.0.1
+repository: https://github.com/stijnvanbael/fabric/tree/master/metadata
 
 environment:
   sdk: '>=2.14.4 <3.0.0'
