@@ -19,3 +19,10 @@ builders:
       "test/$package$": [ "test/fabric.g.dart" ]
     auto_apply: root_package
     build_to: source
+  fabric_example_generator:
+    import: "package:fabric_generator/fabric_generator.dart"
+    builder_factories: [ "fabricExampleBuilder" ]
+    build_extensions:
+      "test/$package$": [ "example/fabric.g.dart" ]
+    auto_apply: root_package
+    build_to: source

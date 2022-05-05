@@ -10,15 +10,22 @@ import 'package:merging_builder/merging_builder.dart';
 export 'src/managed_object_generator.dart';
 
 Builder fabricLibBuilder(BuilderOptions options) =>
-    MergingBuilder<MapEntry<String, String>, LibDir>(
+    MergingBuilder<Definition, LibDir>(
       generator: ManagedObjectGenerator(),
-      inputFiles: 'lib/*.dart',
+      inputFiles: 'lib/**.dart',
       outputFile: 'lib/fabric.g.dart',
     );
 
 Builder fabricTestBuilder(BuilderOptions options) =>
-    MergingBuilder<MapEntry<String, String>, PackageDir>(
+    MergingBuilder<Definition, PackageDir>(
       generator: ManagedObjectGenerator(),
-      inputFiles: 'test/*.dart',
+      inputFiles: 'test/**.dart',
       outputFile: 'test/fabric.g.dart',
+    );
+
+Builder fabricExampleBuilder(BuilderOptions options) =>
+    MergingBuilder<Definition, PackageDir>(
+      generator: ManagedObjectGenerator(),
+      inputFiles: 'example/**.dart',
+      outputFile: 'example/fabric.g.dart',
     );

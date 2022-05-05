@@ -6,10 +6,9 @@ import 'package:fabric_metadata/fabric_metadata.dart';
 import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
-class ManagedObjectGenerator
-    extends MergingGenerator<MapEntry<String, String>, Managed> {
+class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
   @override
-  MapEntry<String, String> generateStreamItemForAnnotatedElement(
+  Definition generateStreamItemForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
     if (element.kind != ElementKind.CLASS) {
       throw "ERROR: @Managed can only be used on a class, found on $element";
@@ -20,26 +19,31 @@ class ManagedObjectGenerator
     }
     var constructorParams = constructor.parameters;
     var typeName = element.name;
-    return MapEntry(element.enclosingElement.librarySource.shortName, """
-      fabric.registerFactory((Fabric fabric) {
-        return $typeName(
-        ${constructorParams.map(_generateParam).join(",\n")}
-        );
-      });
-    """);
+    return Definition(
+      registration: """
+        fabric.registerFactory((Fabric fabric) {
+          return $typeName(
+          ${constructorParams.map(_generateParam).join(",\n")}
+          );
+        });
+      """,
+      imports: {
+        _pathOf(element.enclosingElement),
+        ...constructorParams.map((param) =>
+            _pathOf(param.type.element!.library!.definingCompilationUnit)),
+      },
+    );
   }
 
   @override
-  Future<String> generateMergedContent(
-      Stream<MapEntry<String, String>> stream) async {
+  Future<String> generateMergedContent(Stream<Definition> stream) async {
     var imports = <String>{};
-    var definitions = await stream.map((element) {
-      imports.add("import '${element.key}';");
-      return element.value;
+    var definitions = await stream.map((definition) {
+      for (var element in definition.imports) {
+        imports.add("import '$element';");
+      }
+      return definition.registration;
     }).join("\n");
-    if (definitions.isEmpty) {
-      return "";
-    }
     return """
       import 'package:fabric_manager/fabric_manager.dart';
       ${imports.join("\n")}
@@ -65,5 +69,22 @@ class ManagedObjectGenerator
     return result;
   }
 
-  bool _isClass(Element element) => element.kind == ElementKind.CLASS;
+  String _pathOf(CompilationUnitElement library) {
+    var uri = library.librarySource.uri;
+    if (uri.scheme == "asset") {
+      return uri.pathSegments.skip(2).join("/");
+    } else {
+      return uri.toString();
+    }
+  }
+}
+
+class Definition {
+  final String registration;
+  final Set<String> imports;
+
+  Definition({
+    required this.registration,
+    required this.imports,
+  });
 }

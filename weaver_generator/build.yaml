@@ -1,0 +1,28 @@
+targets:
+  $default:
+    builders:
+      fabric_weaver_generator|fabric_weaver:
+        enabled: true
+
+builders:
+  weaver_lib_generator:
+    import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
+    builder_factories: [ "dispatcherLibBuilder", "boxRegistryLibBuilder", "applicationLibBuilder" ]
+    build_extensions:
+      "lib/$lib$": [ "lib/weaver.g.dart" ]
+    auto_apply: root_package
+    build_to: source
+  weaver_test_generator:
+    import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
+    builder_factories: [ "dispatcherTestBuilder", "boxRegistryTestBuilder", "applicationTestBuilder" ]
+    build_extensions:
+      "test/$package$": [ "test/weaver.g.dart" ]
+    auto_apply: root_package
+    build_to: source
+  weaver_example_generator:
+    import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
+    builder_factories: [ "dispatcherExampleBuilder", "boxRegistryExampleBuilder", "applicationExampleBuilder" ]
+    build_extensions:
+      "test/$package$": [ "example/weaver.g.dart" ]
+    auto_apply: root_package
+    build_to: source

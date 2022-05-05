@@ -7,7 +7,8 @@ environment:
   sdk: '>=2.14.4 <3.0.0'
 
 dependencies:
-  fabric_metadata: ^0.0.1
+  fabric_metadata: #^0.0.1
+    path: ../metadata
 
 dev_dependencies:
   lints: ^1.0.0
