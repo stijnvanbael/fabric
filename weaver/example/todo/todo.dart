@@ -1,10 +1,12 @@
 import 'package:box/box.dart';
 import 'package:controller/controller.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'todo.g.dart';
 
 @validatable
 @entity
+@JsonSerializable()
 class Todo {
   @key
   final String? id;
@@ -15,14 +17,7 @@ class Todo {
     required this.description,
   });
 
-  Todo.fromJson(Map<String, dynamic> json)
-      : this(
-          id: json['id'],
-          description: json['description'],
-        );
+  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'description': description,
-      };
+  Map<String, dynamic> toJson() => _$TodoToJson(this);
 }
