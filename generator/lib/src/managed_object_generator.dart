@@ -6,6 +6,8 @@ import 'package:fabric_metadata/fabric_metadata.dart';
 import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'util.dart';
+
 class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
   @override
   Definition generateStreamItemForAnnotatedElement(
@@ -65,7 +67,12 @@ class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
     if (typeName == null) {
       throw "ERROR: missing type for parameter ${param.name} of ${param.enclosingElement?.name}";
     }
-    result += "fabric.getInstance<$typeName>()";
+    var config = getMeta(param, Config);
+    if (config != null) {
+      result += "fabric.getConfig('${config.getField("name")!.toStringValue()}')";
+    } else {
+      result += "fabric.getInstance<$typeName>()";
+    }
     return result;
   }
 

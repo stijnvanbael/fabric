@@ -6,6 +6,7 @@ class Fabric {
   final Map<Type, Map<Spec, Set<Factory>>> _registry = {};
   final Map<Type, Map<Spec, Set<dynamic>>> _cache = {};
   final Map<Type, Set<Spec>> _underConstruction = {};
+  final Map<String, String> _config = {};
 
   void registerInstance<T>(T instance) => registerFactory<T>(value(instance));
 
@@ -61,6 +62,17 @@ class Fabric {
 
   void _addToCache<T>(Spec spec, Set<T> instances) =>
       _cache.putIfAbsent(T, () => {})[spec] = instances;
+
+  void registerConfig(String key, String value) {
+    _config[key] = value;
+  }
+
+  String getConfig(String key) {
+    if (!_config.containsKey(key)) {
+      throw StateError("No confiq registered for key '$key'");
+    }
+    return _config[key]!;
+  }
 }
 
 Factory<T> value<T>(T instance) {

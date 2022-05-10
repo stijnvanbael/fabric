@@ -1,14 +1,14 @@
 In progress
 -----------
- * [ ] Add bootstrapper for server app
+ * [ ] Configuration file
 
 Backlog
 -------
- * [ ] Configuration file
  * [ ] Environments
 
 Done
 ----
+ * [x] Add bootstrapper for server app
  * [x] MVP
  * [x] Readme
  * [x] Release

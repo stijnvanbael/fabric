@@ -49,8 +49,14 @@ class Definition {
   final Type type;
   final String? name;
 
-  Definition({
+  const Definition({
     required this.type,
     this.name,
   });
+}
+
+class Config {
+  final String name;
+
+  const Config(this.name);
 }

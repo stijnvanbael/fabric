@@ -8,10 +8,12 @@ void main() {
   group('Fabric metadata', () {
     test('Unnamed constructor param', () {
       var fabric = createFabric();
+      fabric.registerConfig("service.property", "value");
       var service = fabric.getInstance<Service>();
 
       expect(service, isA<Service>());
       expect(service.repository, isA<Repository>());
+      expect(service.property, "value");
     });
   });
 }
@@ -22,6 +24,10 @@ class Repository {}
 @managed
 class Service {
   final Repository repository;
+  final String property;
 
-  Service(this.repository);
+  Service(
+    this.repository,
+    @Config("service.property") this.property,
+  );
 }
