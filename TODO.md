@@ -4,6 +4,8 @@ In progress
 
 Backlog
 -------
+ * [ ] Documentation
+ * [ ] Release
 
 Done
 ----
