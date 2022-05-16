@@ -4,7 +4,7 @@ void main() {
   var fabric = Fabric();
 
   fabric.registerFactory((fabric) =>
-      GreetingService(fabric.getConfig("greetingService.greeting")));
+      GreetingService(fabric.getString("greetingService.greeting")));
   fabric.registerConfig("greetingService.greeting", "Howdy");
 
   var greetingService = fabric.getInstance<GreetingService>();

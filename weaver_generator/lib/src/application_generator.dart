@@ -17,13 +17,17 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
       import 'weaver_box_registry.g.dart';
       import 'weaver_dispatcher.g.dart';
       
-      void startApplication(Factory<Box> databaseFactory) {
+      void startApplication(
+        Factory<Box> databaseFactory, {
+        String configDir = 'lib/conf',
+      }) {
         var fabric = createFabric();
         registerDispatcherBuilders(fabric);
         registerBox(fabric);
         var application = WeaverApplication(
           fabric,
-          databaseFactory: databaseFactory,
+          databaseFactory: databaseFactory, 
+          configDir: configDir,
         );
         application.start();
       } 

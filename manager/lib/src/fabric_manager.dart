@@ -63,16 +63,19 @@ class Fabric {
   void _addToCache<T>(Spec spec, Set<T> instances) =>
       _cache.putIfAbsent(T, () => {})[spec] = instances;
 
-  void registerConfig(String key, String value) {
-    _config[key] = value;
-  }
+  void registerConfig(String key, String value) => _config[key] = value;
 
-  String getConfig(String key) {
+  void registerConfigMap(Map<String, String> configMap) =>
+      _config.addAll(configMap);
+
+  String getString(String key) {
     if (!_config.containsKey(key)) {
       throw StateError("No confiq registered for key '$key'");
     }
     return _config[key]!;
   }
+
+  int getInt(String key) => int.parse(getString(key));
 }
 
 Factory<T> value<T>(T instance) {
