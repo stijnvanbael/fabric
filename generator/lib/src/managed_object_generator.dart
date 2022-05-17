@@ -69,7 +69,7 @@ class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
     }
     var config = getMeta(param, Config);
     if (config != null) {
-      result += "fabric.getConfig('${config.getField("name")!.toStringValue()}')";
+      result += "fabric.getString('${config.getField("name")!.toStringValue()}')";
     } else {
       result += "fabric.getInstance<$typeName>()";
     }

@@ -9,16 +9,16 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
   @override
   String generateMergedContent(Stream<dynamic> stream) {
     return """
-      import 'package:box/box.dart';
       import 'package:fabric_manager/fabric_manager.dart';
+      import 'package:fabric_metadata/fabric_metadata.dart';
       import 'package:fabric_weaver/fabric_weaver.dart';
             
       import 'fabric.g.dart';
       import 'weaver_box_registry.g.dart';
       import 'weaver_dispatcher.g.dart';
       
-      void startApplication(
-        Factory<Box> databaseFactory, {
+      void startApplication({
+        Map<Spec, Factory> factories = const {},
         String configDir = 'lib/conf',
       }) {
         var fabric = createFabric();
@@ -26,7 +26,7 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
         registerBox(fabric);
         var application = WeaverApplication(
           fabric,
-          databaseFactory: databaseFactory, 
+          factories: factories,
           configDir: configDir,
         );
         application.start();
