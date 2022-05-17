@@ -3,9 +3,9 @@ import 'package:fabric_metadata/fabric_metadata.dart';
 typedef Factory<T> = T Function(Fabric fabric);
 
 class Fabric {
-  final Map<Type, Map<Spec, Set<Factory>>> _registry = {};
-  final Map<Type, Map<Spec, Set<dynamic>>> _cache = {};
-  final Map<Type, Set<Spec>> _underConstruction = {};
+  final Map<Spec, Set<Factory>> _registry = {};
+  final Map<Spec, Set<dynamic>> _cache = {};
+  final Set<Spec> _underConstruction = {};
   final Map<String, String> _config = {};
 
   void registerInstance<T>(T instance) => registerFactory<T>(value(instance));
@@ -13,10 +13,8 @@ class Fabric {
   void registerFactory<T>(Factory<T> factory) =>
       register<T>(TypeSpec(T), factory);
 
-  void register<T>(Spec spec, Factory<T> factory) => _registry
-      .putIfAbsent(T, () => {})
-      .putIfAbsent(spec, () => {})
-      .add(factory);
+  void register<T>(Spec spec, Factory<T> factory) =>
+      _registry.putIfAbsent(spec, () => {}).add(factory);
 
   T getInstance<T>([Spec? spec]) {
     var instances = getInstances<T>(spec);
@@ -36,11 +34,11 @@ class Fabric {
     return instances;
   }
 
-  Set<T>? _fromCache<T>(Spec spec) => _cache[T]?[spec] as Set<T>?;
+  Set<T>? _fromCache<T>(Spec spec) => _cache[spec] as Set<T>?;
 
   Set<T> _createInstances<T>(Spec spec) {
     _startConstruction<T>(spec);
-    var factories = _registry[T]?[spec];
+    var factories = _registry[spec];
     if (factories == null) {
       throw ArgumentError("No factory registered for $T($spec)");
     }
@@ -50,18 +48,16 @@ class Fabric {
   }
 
   void _startConstruction<T>(Spec spec) {
-    _underConstruction.putIfAbsent(T, () => {});
-    if (_underConstruction[T]!.contains(spec)) {
+    if (_underConstruction.contains(spec)) {
       throw StateError(
           "Circular dependency detected when constructing $T($spec)");
     }
-    _underConstruction[T]!.add(spec);
+    _underConstruction.add(spec);
   }
 
-  void _finishConstruction<T>(Spec spec) => _underConstruction[T]!.remove(spec);
+  void _finishConstruction<T>(Spec spec) => _underConstruction.remove(spec);
 
-  void _addToCache<T>(Spec spec, Set<T> instances) =>
-      _cache.putIfAbsent(T, () => {})[spec] = instances;
+  void _addToCache<T>(Spec spec, Set<T> instances) => _cache[spec] = instances;
 
   void registerConfig(String key, String value) => _config[key] = value;
 

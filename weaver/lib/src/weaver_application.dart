@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:box/box.dart';
 import 'package:controller/controller.dart';
 import 'package:fabric_manager/fabric_manager.dart';
+import 'package:fabric_metadata/fabric_metadata.dart';
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -12,12 +12,12 @@ final Logger log = Logger('weaver');
 
 class WeaverApplication {
   final Fabric fabric;
-  final Factory<Box>? databaseFactory;
+  final Map<Spec, Factory> factories;
   final String configDir;
 
   WeaverApplication(
     this.fabric, {
-    this.databaseFactory,
+    this.factories = const {},
     required this.configDir,
   }) {
     _configureDefaults();
@@ -27,8 +27,8 @@ class WeaverApplication {
     _configureLogging();
     log.info('Starting application');
     _loadConfig();
-    if (databaseFactory != null) {
-      fabric.registerFactory(databaseFactory!);
+    for (var entry in factories.entries) {
+      fabric.register(entry.key, entry.value);
     }
     var handler = _createRequestHandler();
 
@@ -41,17 +41,16 @@ class WeaverApplication {
   }
 
   void _loadConfig() {
-    log.fine('Loading config.yaml');
-    var configFile = File('$configDir/config.yaml');
+    var configFile = File('${_relativeConfigDir()}/config.yaml');
     if (configFile.existsSync()) {
-      log.fine('config.yaml found');
+      log.info('Loading config from $configFile');
       var contents = configFile.readAsStringSync();
       var yaml = loadYaml(contents);
       var flattened = _flatten(yaml, '');
       log.fine('Config: $flattened');
       fabric.registerConfigMap(flattened);
     } else {
-      log.fine('config.yaml not found');
+      log.warning('$configFile not found, assuming defaults');
     }
   }
 
@@ -81,5 +80,31 @@ class WeaverApplication {
       throw ArgumentError('List config not yet supported');
     }
     return {prefix.substring(0, prefix.length - 1): yaml.toString()};
+  }
+
+  String _relativeConfigDir() {
+    var currentPath = Directory.current.path.split('/');
+    var configPath = configDir.split('/');
+    for (var index = 0; index < currentPath.length; index++) {
+      var subPath = currentPath.sublist(index);
+      if (configPath.startsWith(subPath)) {
+        return configPath.sublist(subPath.length).join('/');
+      }
+    }
+    return configDir;
+  }
+}
+
+extension IterableStartsWith<T> on Iterable<T> {
+  bool startsWith(Iterable<T> elements) {
+    if (length < elements.length) {
+      return false;
+    }
+    for (var index = 0; index < elements.length; index++) {
+      if (elementAt(index) != elements.elementAt(index)) {
+        return false;
+      }
+    }
+    return true;
   }
 }
