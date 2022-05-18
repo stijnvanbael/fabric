@@ -20,6 +20,7 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
       void startApplication({
         Map<Spec, Factory> factories = const {},
         String configDir = 'lib/conf',
+        List<String> arguments = const [],
       }) {
         var fabric = createFabric();
         registerDispatcherBuilders(fabric);
@@ -28,6 +29,7 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
           fabric,
           factories: factories,
           configDir: configDir,
+          arguments: arguments,
         );
         application.start();
       } 

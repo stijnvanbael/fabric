@@ -64,14 +64,19 @@ class Fabric {
   void registerConfigMap(Map<String, String> configMap) =>
       _config.addAll(configMap);
 
-  String getString(String key) {
+  String getString(String key, {String? defaultValue}) {
     if (!_config.containsKey(key)) {
-      throw StateError("No confiq registered for key '$key'");
+      if (defaultValue == null) {
+        throw StateError("No confiq registered for key '$key'");
+      } else {
+        return defaultValue;
+      }
     }
     return _config[key]!;
   }
 
-  int getInt(String key) => int.parse(getString(key));
+  int getInt(String key, {int? defaultValue}) =>
+      int.parse(getString(key, defaultValue: defaultValue?.toString()));
 }
 
 Factory<T> value<T>(T instance) {
