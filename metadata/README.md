@@ -6,7 +6,7 @@ Using a generator, it can automate the task of wiring dependencies for you.
 
 ## Features
 
-* A central registry for registering dependencies
+* A central registry for registering dependencies and configuration values
 * A generator to automatically generate wiring code
 
 ## Getting started
@@ -31,13 +31,13 @@ Add the `@managed` annotation to the classes you want to manage dependencies for
 @managed
 class FooService {
   final FooRepository repository;
-  
+
   FooService(this.repository);
 }
 
 @managed
 class PostgresqlFooRepository implements FooRepository {
-  
+
 }
 ```
 

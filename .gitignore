@@ -2,4 +2,5 @@
 *.g.dart
 .dart_tool/
 .packages
+.box/
 pubspec.lock

@@ -13,13 +13,17 @@ part 'todo_controller.g.dart';
 @managed
 class TodoController {
   final TodoRepository repository;
+  final String message;
 
-  TodoController(this.repository);
+  TodoController(
+    this.repository,
+    @Config('controller.message') this.message,
+  );
 
   @Post('/todos')
   Future<Response> addTodo(@body Todo todo) async {
     await repository.save(todo);
-    return Response.ok("added");
+    return Response.ok(message);
   }
 
   @Get('/todos/:id')

@@ -1,4 +1,5 @@
 import 'package:args/args.dart';
+import 'package:box/box.dart';
 import 'package:controller/controller.dart';
 import 'package:fabric_manager/fabric_manager.dart';
 import 'package:fabric_metadata/fabric_metadata.dart';
@@ -29,7 +30,8 @@ class WeaverApplication {
 
   Future start() async {
     var environment = fabric.getString('env');
-    log.info('Starting application for environment ${environment.isNotEmpty ? environment : 'default'}');
+    log.info(
+        'Starting application for environment ${environment.isNotEmpty ? environment : 'default'}');
     var config = <String, String>{};
     if (environment.isNotEmpty) {
       config = loadConfig(configDir, '');
@@ -39,6 +41,7 @@ class WeaverApplication {
     for (var entry in factories.entries) {
       fabric.register(entry.key, entry.value);
     }
+    _configureBox();
 
     WeaverServer(
       fabric.getInstances<DispatcherBuilder>().toList(),
@@ -59,5 +62,26 @@ class WeaverApplication {
   void _parseArguments() {
     var results = argumentParser.parse(arguments);
     fabric.registerConfig('env', results['env']);
+  }
+
+  void _configureBox() {
+    var type = fabric.getString('box.type', defaultValue: '');
+    switch (type) {
+      case 'memory':
+        fabric.registerFactory<Box>(
+          (fabric) => MemoryBox(fabric.getInstance()),
+        );
+        break;
+      case 'file':
+        fabric.registerFactory<Box>(
+          (fabric) =>
+              FileBox(fabric.getString('box.file.path'), fabric.getInstance()),
+        );
+        break;
+      default:
+        if (type.isNotEmpty) {
+          throw ArgumentError('Unsupported box type: $type');
+        }
+    }
   }
 }

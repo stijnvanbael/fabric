@@ -1,2 +1,9 @@
 server:
   port: 8081
+
+controller:
+  message: added locally
+
+box:
+  file:
+    path: .box/local
