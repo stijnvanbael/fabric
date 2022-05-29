@@ -1,14 +1,13 @@
 name: fabric_manager
 description: Manager for Fabric
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/stijnvanbael/fabric/tree/master/manager
 
 environment:
   sdk: '>=2.14.4 <3.0.0'
 
 dependencies:
-  fabric_metadata: #^0.0.1
-    path: ../metadata
+  fabric_metadata: ^0.0.2
 
 dev_dependencies:
   lints: ^1.0.0

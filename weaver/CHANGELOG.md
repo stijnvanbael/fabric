@@ -1,3 +1,7 @@
-## 1.0.0
+## 0.0.2
 
-- Initial version.
+- Configuration values
+
+## 0.0.1
+
+- MVP

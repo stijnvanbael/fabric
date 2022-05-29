@@ -1,6 +1,6 @@
 name: fabric_metadata
 description: Metadata for Fabric
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/stijnvanbael/fabric/tree/master/metadata
 
 environment:
@@ -10,7 +10,5 @@ dev_dependencies:
   lints: ^1.0.0
   test: ^1.16.0
   build_runner: ^2.1.10
-  fabric_generator: #^0.0.1
-    path: ../generator
-  fabric_manager: #^0.0.1
-    path: ../manager
+  fabric_generator: ^0.0.2
+  fabric_manager: ^0.0.2
