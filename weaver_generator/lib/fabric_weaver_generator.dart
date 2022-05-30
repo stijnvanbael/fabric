@@ -10,23 +10,29 @@ import 'package:fabric_weaver_generator/src/definition.dart';
 import 'package:fabric_weaver_generator/src/dispatcher_generator.dart';
 import 'package:merging_builder/merging_builder.dart';
 
-Builder dispatcherBuilder(BuilderOptions options) =>
-    MergingBuilder<Definition, PackageDir>(
-      generator: DispatcherGenerator(),
-      inputFiles: options.config['folder'] + '**.dart',
-      outputFile: options.config['folder'] + 'weaver_dispatcher.g.dart',
-    );
+Builder dispatcherBuilder(BuilderOptions options) {
+  var folder = options.config['folder'];
+  return MergingBuilder<Definition, PackageDir>(
+    generator: DispatcherGenerator(),
+    inputFiles: '$folder/**.dart',
+    outputFile: '$folder/weaver_dispatcher.g.dart',
+  );
+}
 
-Builder boxRegistryBuilder(BuilderOptions options) =>
-    MergingBuilder<Definition, PackageDir>(
-      generator: BoxRegistryGenerator(),
-      inputFiles: options.config['folder'] + '**.dart',
-      outputFile: options.config['folder'] + 'weaver_box_registry.g.dart',
-    );
+Builder boxRegistryBuilder(BuilderOptions options) {
+  var folder = options.config['folder'];
+  return MergingBuilder<Definition, PackageDir>(
+    generator: BoxRegistryGenerator(),
+    inputFiles: '$folder/**.dart',
+    outputFile: '$folder/weaver_box_registry.g.dart',
+  );
+}
 
-Builder applicationBuilder(BuilderOptions options) =>
-    MergingBuilder<dynamic, PackageDir>(
-      generator: ApplicationGenerator(options.config['folder']),
-      inputFiles: options.config['folder'] + '**.dart',
-      outputFile: options.config['folder'] + 'weaver_application.g.dart',
-    );
+Builder applicationBuilder(BuilderOptions options) {
+  var folder = options.config['folder'];
+  return MergingBuilder<dynamic, PackageDir>(
+    generator: ApplicationGenerator(folder),
+    inputFiles: '$folder/**.dart',
+    outputFile: '$folder/weaver_application.g.dart',
+  );
+}

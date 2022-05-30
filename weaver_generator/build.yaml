@@ -28,27 +28,24 @@ builders:
   weaver_lib_generator:
     import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
     builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
-    build_extensions:
-      "lib/$lib$": [ "lib/weaver.g.dart" ]
+    build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
     auto_apply: root_package
     build_to: source
     defaults:
-      options: { "folder": "lib/" }
+      options: { "folder": "lib" }
   weaver_test_generator:
     import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
     builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
-    build_extensions:
-      "test/$package$": [ "test/weaver.g.dart" ]
+    build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
     auto_apply: root_package
     build_to: source
     defaults:
-      options: { "folder": "test/" }
+      options: { "folder": "test" }
   weaver_example_generator:
     import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
     builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
-    build_extensions:
-      "example/$package$": [ "example/weaver.g.dart" ]
+    build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
     auto_apply: root_package
     build_to: source
     defaults:
-      options: { "folder": "example/" }
+      options: { "folder": "example" }

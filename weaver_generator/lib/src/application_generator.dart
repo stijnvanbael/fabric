@@ -23,7 +23,7 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
       
       void startApplication({
         Map<Spec, Factory> factories = const {},
-        String configDir = '${folder}conf',
+        String configDir = '$folder/conf',
         List<String> arguments = const [],
       }) {
         var fabric = createFabric();
