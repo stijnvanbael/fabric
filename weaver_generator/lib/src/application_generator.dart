@@ -6,6 +6,10 @@ import 'package:merging_builder/merging_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
 class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
+  final String folder;
+
+  ApplicationGenerator(this.folder);
+
   @override
   String generateMergedContent(Stream<dynamic> stream) {
     return """
@@ -19,7 +23,7 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
       
       void startApplication({
         Map<Spec, Factory> factories = const {},
-        String configDir = 'lib/conf',
+        String configDir = '${folder}conf',
         List<String> arguments = const [],
       }) {
         var fabric = createFabric();

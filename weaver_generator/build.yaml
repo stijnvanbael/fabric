@@ -11,38 +11,44 @@ builders:
   box_generator:
     target: ":box_generator"
     import: "package:box_generator/box_generator.dart"
-    builder_factories: ["registryBuilder"]
-    build_extensions: {".dart": [".box_generator.g.part"]}
+    builder_factories: [ "registryBuilder" ]
+    build_extensions: { ".dart": [ ".box_generator.g.part" ] }
     auto_apply: dependents
     build_to: cache
-    applies_builders: ["source_gen|combining_builder"]
+    applies_builders: [ "source_gen|combining_builder" ]
 
   json_serializable:
     import: "package:json_serializable/builder.dart"
-    builder_factories: ["jsonSerializable"]
-    build_extensions: {".dart": ["json_serializable.g.part"]}
+    builder_factories: [ "jsonSerializable" ]
+    build_extensions: { ".dart": [ "json_serializable.g.part" ] }
     auto_apply: dependents
     build_to: cache
-    applies_builders: ["source_gen|combining_builder"]
+    applies_builders: [ "source_gen|combining_builder" ]
 
   weaver_lib_generator:
     import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
-    builder_factories: [ "dispatcherLibBuilder", "boxRegistryLibBuilder", "applicationLibBuilder" ]
+    builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
     build_extensions:
       "lib/$lib$": [ "lib/weaver.g.dart" ]
     auto_apply: root_package
     build_to: source
+    defaults:
+      options: { "folder": "lib/" }
   weaver_test_generator:
     import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
-    builder_factories: [ "dispatcherTestBuilder", "boxRegistryTestBuilder", "applicationTestBuilder" ]
+    builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
     build_extensions:
       "test/$package$": [ "test/weaver.g.dart" ]
     auto_apply: root_package
     build_to: source
+    defaults:
+      options: { "folder": "test/" }
   weaver_example_generator:
     import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
-    builder_factories: [ "dispatcherExampleBuilder", "boxRegistryExampleBuilder", "applicationExampleBuilder" ]
+    builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
     build_extensions:
-      "test/$package$": [ "example/weaver.g.dart" ]
+      "example/$package$": [ "example/weaver.g.dart" ]
     auto_apply: root_package
     build_to: source
+    defaults:
+      options: { "folder": "example/" }
