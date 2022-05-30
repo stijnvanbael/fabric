@@ -9,8 +9,8 @@ environment:
 dependencies:
   build: ^2.3.0
   source_gen: ^1.2.2
-  merging_builder: ^0.2.3
-  analyzer: ^2.7.0
+  merging_builder: #^0.2.3
+    path: ../../merging_builder
   fabric_manager: ^0.0.2
   fabric_metadata: ^0.0.2
 

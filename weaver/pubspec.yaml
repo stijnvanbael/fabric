@@ -19,10 +19,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.1.10
-  fabric_generator: ^0.0.2
-  fabric_weaver_generator: ^0.0.2
-  controller_generator: ^0.1.4
-  box_generator: ^0.3.3+2
-  json_serializable: ^6.2.0
+  fabric_weaver_generator: #^0.0.2
+    path: ../weaver_generator
   lints: ^1.0.0
   test: ^1.16.0

@@ -9,10 +9,17 @@ environment:
 dependencies:
   build: ^2.3.0
   source_gen: ^1.2.2
-  merging_builder: ^0.2.3
-  analyzer: ^2.7.0
+  merging_builder: #^0.2.3
+    path: ../../merging_builder
   controller: ^0.1.4
   box: ^0.3.3+2
+  fabric_generator: #^0.0.2
+    path: ../generator
+  controller_generator: #^0.1.4
+    path: ../../controller_generator
+  box_generator: #^0.3.3+2
+    path: ../../box_generator
+  json_serializable: ^6.2.0
 
 dev_dependencies:
   lints: ^1.0.0
