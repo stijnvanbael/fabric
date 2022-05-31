@@ -7,22 +7,28 @@ targets:
 builders:
   fabric_lib_generator:
     import: "package:fabric_generator/fabric_generator.dart"
-    builder_factories: [ "fabricLibBuilder" ]
+    builder_factories: [ "fabricBuilder" ]
     build_extensions:
       "lib/$lib$": [ "lib/fabric.g.dart" ]
     auto_apply: root_package
     build_to: source
+    defaults:
+      options: { "folder": "lib" }
   fabric_test_generator:
     import: "package:fabric_generator/fabric_generator.dart"
-    builder_factories: [ "fabricTestBuilder" ]
+    builder_factories: [ "fabricBuilder" ]
     build_extensions:
       "test/$package$": [ "test/fabric.g.dart" ]
     auto_apply: root_package
     build_to: source
+    defaults:
+      options: { "folder": "test" }
   fabric_example_generator:
     import: "package:fabric_generator/fabric_generator.dart"
-    builder_factories: [ "fabricExampleBuilder" ]
+    builder_factories: [ "fabricBuilder" ]
     build_extensions:
-      "test/$package$": [ "example/fabric.g.dart" ]
+      "example/$package$": [ "example/fabric.g.dart" ]
     auto_apply: root_package
     build_to: source
+    defaults:
+      options: { "folder": "example" }
