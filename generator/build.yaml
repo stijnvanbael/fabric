@@ -8,8 +8,7 @@ builders:
   fabric_lib_generator:
     import: "package:fabric_generator/fabric_generator.dart"
     builder_factories: [ "fabricBuilder" ]
-    build_extensions:
-      "lib/$lib$": [ "lib/fabric.g.dart" ]
+    build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
     auto_apply: root_package
     build_to: source
     defaults:
@@ -17,8 +16,7 @@ builders:
   fabric_test_generator:
     import: "package:fabric_generator/fabric_generator.dart"
     builder_factories: [ "fabricBuilder" ]
-    build_extensions:
-      "test/$package$": [ "test/fabric.g.dart" ]
+    build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
     auto_apply: root_package
     build_to: source
     defaults:
@@ -26,8 +24,7 @@ builders:
   fabric_example_generator:
     import: "package:fabric_generator/fabric_generator.dart"
     builder_factories: [ "fabricBuilder" ]
-    build_extensions:
-      "example/$package$": [ "example/fabric.g.dart" ]
+    build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
     auto_apply: root_package
     build_to: source
     defaults:

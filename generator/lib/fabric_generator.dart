@@ -11,7 +11,7 @@ export 'src/managed_object_generator.dart';
 
 Builder fabricBuilder(BuilderOptions options) {
   var folder = options.config['folder'];
-  return MergingBuilder<Definition, LibDir>(
+  return MergingBuilder<Definition, PackageDir>(
       generator: ManagedObjectGenerator(),
       inputFiles: '$folder/**.dart',
       outputFile: '$folder/fabric.g.dart',
