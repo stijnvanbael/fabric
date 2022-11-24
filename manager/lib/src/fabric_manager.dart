@@ -21,6 +21,9 @@ class Fabric {
     if (instances.length > 1) {
       throw StateError("Multiple definitions found for $T($spec)");
     }
+    if (instances.isEmpty) {
+      throw ArgumentError("No factory registered for $T($spec)");
+    }
     return instances.first;
   }
 
@@ -40,7 +43,7 @@ class Fabric {
     _startConstruction<T>(spec);
     var factories = _registry[spec];
     if (factories == null) {
-      throw ArgumentError("No factory registered for $T($spec)");
+      return {};
     }
     var instances = factories.map((factory) => factory(this) as T).toSet();
     _finishConstruction<T>(spec);

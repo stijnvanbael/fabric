@@ -1,19 +1,19 @@
 name: fabric_generator
 description: Generator for Fabric
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/stijnvanbael/fabric/tree/master/generator
 
 environment:
   sdk: '>=2.14.4 <3.0.0'
 
 dependencies:
-  build: ^2.3.0
-  source_gen: ^1.2.2
-  merging_builder: #^0.2.3
-    path: ../../merging_builder
-  fabric_manager: ^0.0.2
-  fabric_metadata: ^0.0.2
+  analyzer: ^5.2.0
+  build: ^2.3.1
+  source_gen: ^1.2.6
+  merging_builder_svb: ^0.2.4
+  fabric_manager: ^0.0.3
+  fabric_metadata: ^0.0.3
 
 dev_dependencies:
-  lints: ^1.0.0
-  test: ^1.16.0
+  lints: ^2.0.1
+  test: ^1.22.0

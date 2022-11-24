@@ -5,7 +5,7 @@ library fabric_generator;
 
 import 'package:build/build.dart';
 import 'package:fabric_generator/src/managed_object_generator.dart';
-import 'package:merging_builder/merging_builder.dart';
+import 'package:merging_builder_svb/merging_builder_svb.dart';
 
 export 'src/managed_object_generator.dart';
 

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:fabric_metadata/fabric_metadata.dart';
-import 'package:merging_builder/merging_builder.dart';
+import 'package:merging_builder_svb/merging_builder_svb.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'util.dart';
@@ -69,7 +69,8 @@ class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
     }
     var config = getMeta(param, Config);
     if (config != null) {
-      result += "fabric.getString('${config.getField("name")!.toStringValue()}')";
+      result +=
+          "fabric.getString('${config.getField("name")!.toStringValue()}')";
     } else {
       result += "fabric.getInstance<$typeName>()";
     }

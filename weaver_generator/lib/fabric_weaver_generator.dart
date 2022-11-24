@@ -8,7 +8,7 @@ import 'package:fabric_weaver_generator/src/application_generator.dart';
 import 'package:fabric_weaver_generator/src/box_registry_generator.dart';
 import 'package:fabric_weaver_generator/src/definition.dart';
 import 'package:fabric_weaver_generator/src/dispatcher_generator.dart';
-import 'package:merging_builder/merging_builder.dart';
+import 'package:merging_builder_svb/merging_builder_svb.dart';
 
 Builder dispatcherBuilder(BuilderOptions options) {
   var folder = options.config['folder'];

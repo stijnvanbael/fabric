@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:merging_builder/merging_builder.dart';
+import 'package:merging_builder_svb/merging_builder_svb.dart';
 import 'package:source_gen/source_gen.dart';
 
 class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
@@ -21,7 +21,7 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
       import 'weaver_box_registry.g.dart';
       import 'weaver_dispatcher.g.dart';
       
-      void startApplication({
+      WeaverApplication startApplication({
         Map<Spec, Factory> factories = const {},
         String configDir = '$folder/conf',
         List<String> arguments = const [],
@@ -36,6 +36,7 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
           arguments: arguments,
         );
         application.start();
+        return application;
       } 
     """;
   }
