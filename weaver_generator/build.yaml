@@ -25,7 +25,15 @@ builders:
     build_to: cache
     applies_builders: [ "source_gen|combining_builder" ]
 
-  weaver_lib_generator:
+  retrofit:
+    import: "package:retrofit_generator/retrofit_generator.dart"
+    builder_factories: [ "retrofitBuilder" ]
+    build_extensions: { ".dart": [ "retrofit.g.part" ] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: [ "source_gen|combining_builder" ]
+
+  weaver_generator:
     import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
     builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
     build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
@@ -33,19 +41,3 @@ builders:
     build_to: source
     defaults:
       options: { "folder": "lib" }
-  weaver_test_generator:
-    import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
-    builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
-    build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
-    auto_apply: root_package
-    build_to: source
-    defaults:
-      options: { "folder": "test" }
-  weaver_example_generator:
-    import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
-    builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
-    build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
-    auto_apply: root_package
-    build_to: source
-    defaults:
-      options: { "folder": "example" }

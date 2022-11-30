@@ -2,6 +2,7 @@ import 'package:args/args.dart';
 import 'package:box/box.dart';
 import 'package:box/mongodb.dart';
 import 'package:controller/controller.dart';
+import 'package:dio/dio.dart';
 import 'package:fabric_manager/fabric_manager.dart';
 import 'package:fabric_metadata/fabric_metadata.dart';
 import 'package:fabric_weaver/src/weaver_config.dart';
@@ -40,6 +41,8 @@ class WeaverApplication {
     }
     config.addAll(loadConfig(configDir, environment));
     fabric.registerConfigMap(config);
+    fabric.registerInstance(fabric);
+    fabric.registerInstance(Dio());
     for (var entry in factories.entries) {
       fabric.register(entry.key, entry.value);
     }

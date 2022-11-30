@@ -1,4 +1,4 @@
-A library that combines `fabric` with the power of `box` and `controller`.
+An application bootstrapper that combines `fabric_manager` with the power of `box`, `controller` and `retrofit`.
 
 ## Features
 

@@ -1,10 +1,9 @@
 name: fabric_weaver_generator
 description: Generator for Fabric Weaver
-version: 0.0.3
+version: 0.0.4
 
 environment:
   sdk: '>=2.16.2 <3.0.0'
-
 
 dependencies:
   analyzer: ^5.2.0
@@ -13,10 +12,11 @@ dependencies:
   merging_builder_svb: ^0.2.4
   controller: ^0.1.5
   box: ^0.3.4
-  fabric_generator: ^0.0.3
+  fabric_generator: ^0.0.4
   controller_generator: ^0.1.5
   box_generator: ^0.3.4
   json_serializable: ^6.2.0
+  retrofit_generator: ^4.2.0
 
 dev_dependencies:
   lints: ^2.0.1
