@@ -37,7 +37,7 @@ builders:
     import: "package:fabric_weaver_generator/fabric_weaver_generator.dart"
     builder_factories: [ "dispatcherBuilder", "boxRegistryBuilder", "applicationBuilder" ]
     build_extensions: { "*/$package$": [ "weaver.g.dart" ] }
-    auto_apply: root_package
+    auto_apply: dependents
     build_to: source
     defaults:
       options: { "folder": "lib" }
