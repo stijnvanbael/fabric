@@ -12,7 +12,8 @@ import 'package:shelf/shelf.dart';
 
 final Logger log = Logger('weaver_application');
 final ArgParser argumentParser = ArgParser()
-  ..addOption('env', abbr: 'e', defaultsTo: '');
+  ..addOption('env', abbr: 'e', defaultsTo: '')
+  ..addOption('secrets', abbr: 's', defaultsTo: '.secrets');
 
 class WeaverApplication {
   final Fabric fabric;
@@ -33,13 +34,14 @@ class WeaverApplication {
 
   Future start() async {
     var environment = fabric.getString('env');
+    var secretsPath = fabric.getString('secrets');
     log.info(
         'Starting application for environment ${environment.isNotEmpty ? environment : 'default'}');
     var config = <String, String>{};
     if (environment.isNotEmpty) {
-      config = loadConfig(configDir, '');
+      config = loadConfig(configDir, '', secretsPath);
     }
-    config.addAll(loadConfig(configDir, environment));
+    config.addAll(loadConfig(configDir, environment, secretsPath));
     fabric.registerConfigMap(config);
     fabric.registerInstance(fabric);
     fabric.registerInstance(Dio());
@@ -89,6 +91,7 @@ class WeaverApplication {
   void _parseArguments() {
     var results = argumentParser.parse(arguments);
     fabric.registerConfig('env', results['env']);
+    fabric.registerConfig('secrets', results['secrets']);
   }
 
   void _configureBox() {

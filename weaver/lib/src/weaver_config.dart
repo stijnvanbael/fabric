@@ -5,12 +5,16 @@ import 'package:yaml/yaml.dart';
 
 final Logger log = Logger('weaver_config');
 
-Map<String, String> loadConfig(String configDir, String environment) {
+Map<String, String> loadConfig(
+  String configDir,
+  String environment,
+  String secretsPath,
+) {
   var dir = _relativeConfigDir(configDir);
   var suffix = environment.isNotEmpty ? '-$environment' : '';
   var config = <String, String>{};
   config.addAll(_loadConfig(dir, 'config$suffix'));
-  config.addAll(_loadConfig(dir, 'config.secrets$suffix'));
+  config.addAll(_loadConfig(dir, '$secretsPath$suffix'));
   return config;
 }
 
