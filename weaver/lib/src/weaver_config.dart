@@ -6,19 +6,27 @@ import 'package:yaml/yaml.dart';
 final Logger log = Logger('weaver_config');
 
 Map<String, String> loadConfig(String configDir, String environment) {
-  log.fine('Loading config.yaml');
   var dir = _relativeConfigDir(configDir);
   var suffix = environment.isNotEmpty ? '-$environment' : '';
-  var configFile = File('$dir/config$suffix.yaml');
+  var config = <String, String>{};
+  config.addAll(_loadConfig(dir, 'config$suffix'));
+  config.addAll(_loadConfig(dir, 'config.secrets$suffix'));
+  return config;
+}
+
+Map<String, String> _loadConfig(String dir, String name) {
+  var path = '$dir/$name.yaml';
+  log.fine('Loading $path');
+  var configFile = File(path);
   if (configFile.existsSync()) {
-    log.fine('config$suffix.yaml found');
+    log.fine('$path found');
     var contents = configFile.readAsStringSync();
     var yaml = loadYaml(contents);
     var flattened = _flatten(yaml, '');
     log.fine('Config: $flattened');
     return flattened;
   } else {
-    log.fine('config$suffix.yaml not found');
+    log.fine('$path not found');
     return {};
   }
 }

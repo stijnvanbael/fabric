@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Support for config.secrets.yaml as secondary config file
+
 ## 0.0.4
 
 - Removed unused builders
