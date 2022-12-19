@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:controller/controller.dart';
+import 'package:fabric_weaver_generator/src/util.dart';
 import 'package:merging_builder_svb/merging_builder_svb.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -18,10 +19,14 @@ class DispatcherGenerator extends MergingGenerator<Definition, Controller> {
     if (element.kind != ElementKind.CLASS) {
       throw "ERROR: @Controller can only be used on a class, found on $element";
     }
+    final hasSecurity = (element as ClassElement)
+        .methods
+        .any((method) => method.hasMeta(Secured));
     return Definition(
       registration: "fabric.registerFactory<DispatcherBuilder>((fabric) => "
-          "${element.name}\$DispatcherBuilder(fabric.getInstance()));",
-      imports: {_pathOf((element as ClassElement).enclosingElement)},
+          "${element.name}\$DispatcherBuilder(fabric.getInstance()"
+          "${hasSecurity ? ', fabric.getInstance()' : ''}));",
+      imports: {_pathOf(element.enclosingElement)},
     );
   }
 

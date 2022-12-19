@@ -19,10 +19,12 @@ class Fabric {
   T getInstance<T>([Spec? spec]) {
     var instances = getInstances<T>(spec);
     if (instances.length > 1) {
-      throw StateError("Multiple definitions found for $T($spec)");
+      throw StateError(
+          'Multiple definitions found for ${spec != null ? '($spec)' : ''}');
     }
     if (instances.isEmpty) {
-      throw ArgumentError("No factory registered for $T($spec)");
+      throw ArgumentError(
+          'No factory registered for $T${spec != null ? '($spec)' : ''}');
     }
     return instances.first;
   }
@@ -80,6 +82,9 @@ class Fabric {
 
   int getInt(String key, {int? defaultValue}) =>
       int.parse(getString(key, defaultValue: defaultValue?.toString()));
+
+  bool getBool(String key, {bool? defaultValue}) =>
+      getString(key, defaultValue: defaultValue?.toString()) == 'true';
 }
 
 Factory<T> value<T>(T instance) {

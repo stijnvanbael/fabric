@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:args/args.dart';
 import 'package:box/box.dart';
 import 'package:box/mongodb.dart';
 import 'package:controller/controller.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' show Dio;
 import 'package:fabric_manager/fabric_manager.dart';
 import 'package:fabric_metadata/fabric_metadata.dart';
 import 'package:fabric_weaver/src/weaver_config.dart';
@@ -61,10 +63,14 @@ class WeaverApplication {
             ? _createRequestHandler(dispatcherBuilders.toList())
             : null);
     if (handler != null) {
-      WeaverServer(
-        handler: handler,
-        port: fabric.getInt('server.port'),
-      ).start();
+      fabric.registerInstance(RequestHandler(handler));
+      var httpEnabled = fabric.getBool('server.enabled', defaultValue: true);
+      if (httpEnabled) {
+        WeaverServer(
+          handler: handler,
+          port: fabric.getInt('server.port'),
+        ).start();
+      }
     }
   }
 
@@ -118,4 +124,12 @@ class WeaverApplication {
         }
     }
   }
+}
+
+class RequestHandler {
+  final Handler _handler;
+
+  RequestHandler(this._handler);
+
+  FutureOr<Response> handle(Request request) => _handler(request);
 }
