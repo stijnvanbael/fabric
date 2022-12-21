@@ -1,3 +1,7 @@
+## 0.0.6
+
+- Support controller dispatcher with security
+
 ## 0.0.4
 
 - Removed unused builders

@@ -51,6 +51,7 @@ class WeaverApplication {
       fabric.register(entry.key, entry.value);
     }
     _configureBox();
+    _configureSecurity();
     _startHttpServer();
   }
 
@@ -122,6 +123,16 @@ class WeaverApplication {
         if (type.isNotEmpty) {
           throw ArgumentError('Unsupported box type: $type');
         }
+    }
+  }
+
+  void _configureSecurity() {
+    final issuerUri = fabric.getString('security.issuer-uri', defaultValue: '');
+    if (issuerUri.isNotEmpty) {
+      fabric.registerInstance<Security>(JwtSecurity(
+        issuerUri: Uri.parse(issuerUri),
+        clientId: fabric.getString('security.client-id'),
+      ));
     }
   }
 }
