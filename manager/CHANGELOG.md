@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Added support for bool properties
+
 ## 0.0.4
 
 - Removed unused builders
