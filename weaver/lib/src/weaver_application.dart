@@ -76,10 +76,10 @@ class WeaverApplication {
   }
 
   Handler _createRequestHandler(List<DispatcherBuilder> dispatcherBuilders) {
-    var dispatcher = createRequestDispatcher(
-      dispatcherBuilders,
-      corsEnabled: true,
-    );
+    var dispatcher = createRequestDispatcher(dispatcherBuilders,
+        corsEnabled: fabric.getBool('server.cors.enabled', defaultValue: false),
+        allowedOrigins:
+            fabric.getString('server.cors.allowed-origins', defaultValue: ''));
     var handler =
         const Pipeline().addMiddleware(logRequests()).addHandler(dispatcher);
     return handler;

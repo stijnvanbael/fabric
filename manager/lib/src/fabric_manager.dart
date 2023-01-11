@@ -72,7 +72,7 @@ class Fabric {
   String getString(String key, {String? defaultValue}) {
     if (!_config.containsKey(key)) {
       if (defaultValue == null) {
-        throw StateError("No confiq registered for key '$key'");
+        throw StateError("No config registered for key '$key'");
       } else {
         return defaultValue;
       }

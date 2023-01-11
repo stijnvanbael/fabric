@@ -1,3 +1,7 @@
+## 0.0.7
+
+- Support for CORS headers
+
 ## 0.0.6
 
 - Support controller dispatcher with security
