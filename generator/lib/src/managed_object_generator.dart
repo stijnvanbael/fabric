@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:build/build.dart';
 import 'package:fabric_metadata/fabric_metadata.dart';
 import 'package:merging_builder_svb/merging_builder_svb.dart';
@@ -72,11 +73,11 @@ class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
     if (config != null) {
       var name = config.getField("name")!.toStringValue();
       if (type.isDartCoreString) {
-        result += "fabric.getString('$name')";
+        result += _getValue(type.nullabilitySuffix, 'String', name);
       } else if (type.isDartCoreInt) {
-        result += "fabric.getInt('$name')";
+        result += _getValue(type.nullabilitySuffix, 'Int', name);
       } else if (type.isDartCoreBool) {
-        result += "fabric.getBool('$name')";
+        result += _getValue(type.nullabilitySuffix, 'Bool', name);
       } else {
         throw ArgumentError('Unsupported type $type for @Config parameter, '
             'supported types are String, int and bool.');
@@ -85,6 +86,14 @@ class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
       result += "fabric.getInstance<$typeName>()";
     }
     return result;
+  }
+
+  String _getValue(NullabilitySuffix nullability, String type, String? name) {
+    if (nullability == NullabilitySuffix.none) {
+      return "fabric.get$type('$name')";
+    } else {
+      return "fabric.getOptional$type('$name')";
+    }
   }
 
   String _pathOf(CompilationUnitElement library) {

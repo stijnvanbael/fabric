@@ -1,3 +1,7 @@
+## 0.0.6
+
+- Support for nullable @Config injection
+
 ## 0.0.5
 
 - Support for int and bool @Config injection

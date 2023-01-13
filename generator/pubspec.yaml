@@ -1,6 +1,6 @@
 name: fabric_generator
 description: Generator for Fabric
-version: 0.0.5
+version: 0.0.6
 repository: https://github.com/stijnvanbael/fabric/tree/master/generator
 
 environment:
@@ -11,7 +11,7 @@ dependencies:
   build: ^2.3.1
   source_gen: ^1.2.6
   merging_builder_svb: ^0.2.4
-  fabric_manager: ^0.0.4
+  fabric_manager: ^0.0.6
   fabric_metadata: ^0.0.4
 
 dev_dependencies:

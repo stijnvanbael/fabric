@@ -80,13 +80,25 @@ class Fabric {
     return _config[key]!;
   }
 
+  String? getOptionalString(String key) => _config[key];
+
   int getInt(String key, {int? defaultValue}) =>
       int.parse(getString(key, defaultValue: defaultValue?.toString()));
 
+  int? getOptionalInt(String key) =>
+      getOptionalString(key)?.apply(int.parse);
+
   bool getBool(String key, {bool? defaultValue}) =>
       getString(key, defaultValue: defaultValue?.toString()) == 'true';
+
+  bool? getOptionalBool(String key) =>
+      getOptionalString(key)?.apply((string) => string == 'true');
 }
 
 Factory<T> value<T>(T instance) {
   return (fabric) => instance;
+}
+
+extension Apply<T> on T {
+  R apply<R>(R Function(T) function) => function(this);
 }
