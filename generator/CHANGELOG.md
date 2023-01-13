@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Support for int and bool @Config injection
+
 ## 0.0.4
 
 - Removed unused builders

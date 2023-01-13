@@ -63,14 +63,24 @@ class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
     if (param.isNamed) {
       result += "${param.name} = ";
     }
-    var typeName = param.type.element?.name;
+    var type = param.type;
+    var typeName = type.element?.name;
     if (typeName == null) {
       throw "ERROR: missing type for parameter ${param.name} of ${param.enclosingElement?.name}";
     }
     var config = getMeta(param, Config);
     if (config != null) {
-      result +=
-          "fabric.getString('${config.getField("name")!.toStringValue()}')";
+      var name = config.getField("name")!.toStringValue();
+      if (type.isDartCoreString) {
+        result += "fabric.getString('$name')";
+      } else if (type.isDartCoreInt) {
+        result += "fabric.getInt('$name')";
+      } else if (type.isDartCoreBool) {
+        result += "fabric.getBool('$name')";
+      } else {
+        throw ArgumentError('Unsupported type $type for @Config parameter, '
+            'supported types are String, int and bool.');
+      }
     } else {
       result += "fabric.getInstance<$typeName>()";
     }

@@ -1,3 +1,11 @@
+## 0.0.9
+
+- Include files in config
+
+## 0.0.8
+
+- Allow disabling request logging
+
 ## 0.0.7
 
 - Support for CORS headers

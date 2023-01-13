@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
-final Logger log = Logger('weaver_config');
+final Logger _log = Logger('weaver_config');
+final RegExp _include = RegExp(r'\$include\((.+)\)');
 
 Map<String, String> loadConfig(
   String configDir,
@@ -20,17 +21,17 @@ Map<String, String> loadConfig(
 
 Map<String, String> _loadConfig(String dir, String name) {
   var path = '$dir/$name.yaml';
-  log.fine('Loading $path');
+  _log.fine('Loading $path');
   var configFile = File(path);
   if (configFile.existsSync()) {
-    log.fine('$path found');
+    _log.fine('$path found');
     var contents = configFile.readAsStringSync();
     var yaml = loadYaml(contents);
     var flattened = _flatten(yaml, '');
-    log.fine('Config: $flattened');
+    _log.fine('Config: $flattened');
     return flattened;
   } else {
-    log.fine('$path not found');
+    _log.fine('$path not found');
     return {};
   }
 }
@@ -44,7 +45,21 @@ Map<String, String> _flatten(dynamic yaml, String prefix) {
   if (yaml is List) {
     throw ArgumentError('List config not yet supported');
   }
-  return {prefix.substring(0, prefix.length - 1): yaml.toString()};
+  return {prefix.substring(0, prefix.length - 1): _valueOf(yaml)};
+}
+
+String _valueOf(yaml) {
+  final stringValue = yaml.toString();
+  final include = _include.firstMatch(stringValue);
+  if (include != null) {
+    var fileName = 'lib/conf/${include.group(1)}';
+    final file = File(fileName);
+    if (!file.existsSync()) {
+      throw ArgumentError('Included file not found: $fileName');
+    }
+    return file.readAsStringSync();
+  }
+  return stringValue;
 }
 
 String _relativeConfigDir(String configDir) {
