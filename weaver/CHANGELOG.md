@@ -1,3 +1,7 @@
+## 0.0.11
+
+- Support Google Cloud Logging
+
 ## 0.0.10
 
 - Support Google Cloud Functions

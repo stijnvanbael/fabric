@@ -12,6 +12,7 @@ import 'package:fabric_weaver/src/server/shelf.dart';
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 
+import 'logging/google_cloud_logging.dart';
 import 'server/google_cloud_functions.dart';
 
 final Logger log = Logger('weaver_application');
@@ -32,7 +33,6 @@ class WeaverApplication {
     this.arguments = const [],
   }) {
     _configureDefaults();
-    _configureLogging();
     _parseArguments();
   }
 
@@ -52,6 +52,7 @@ class WeaverApplication {
     for (var entry in factories.entries) {
       fabric.register(entry.key, entry.value);
     }
+    _configureLogging();
     _configureBox();
     _configureSecurity();
     _startHttpServer();
@@ -118,9 +119,20 @@ class WeaverApplication {
   }
 
   void _configureLogging() {
-    Logger.root.onRecord.listen((record) {
-      print('${record.level.name}: ${record.time}: ${record.message}');
-    });
+    final googleCloudLoggingEnabled = fabric.getBool(
+      'google-cloud.logging.enabled',
+      defaultValue: false,
+    );
+    hierarchicalLoggingEnabled = true;
+    if (googleCloudLoggingEnabled) {
+      configureGoogleCloudLogging();
+    } else {
+      Logger.root.onRecord.listen((record) {
+        print('${record.level.name}: ${record.time}: ${record.message}');
+      });
+    }
+    Logger('HttpUtils').level = Level.WARNING;
+    Logger('dns_llokup').level = Level.WARNING;
   }
 
   void _parseArguments() {
