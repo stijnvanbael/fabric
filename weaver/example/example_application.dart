@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'weaver_application.g.dart';
+import 'lib/weaver_application.g.dart';
 
 void main(List<String> arguments) {
   print(Directory.current);

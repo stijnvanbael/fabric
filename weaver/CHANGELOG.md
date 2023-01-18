@@ -1,3 +1,7 @@
+## 0.0.10
+
+- Support Google Cloud Functions
+
 ## 0.0.9
 
 - Include files in config

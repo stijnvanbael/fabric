@@ -3,4 +3,4 @@
 /// More dartdocs go here.
 library fabric_weaver;
 
-export 'src/weaver_application.dart';
+export 'src/application.dart';

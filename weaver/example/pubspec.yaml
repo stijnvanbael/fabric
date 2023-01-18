@@ -1,0 +1,12 @@
+name: fabric_weaver_example
+
+environment:
+  sdk: '>=2.16.2 <3.0.0'
+
+dependencies:
+  fabric_weaver:
+    path: ..
+
+dev_dependencies:
+  fabric_weaver_generator:
+    path: ../../weaver_generator

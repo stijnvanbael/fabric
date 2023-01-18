@@ -7,10 +7,12 @@ import 'package:controller/controller.dart';
 import 'package:dio/dio.dart' show Dio;
 import 'package:fabric_manager/fabric_manager.dart';
 import 'package:fabric_metadata/fabric_metadata.dart';
-import 'package:fabric_weaver/src/weaver_config.dart';
-import 'package:fabric_weaver/src/weaver_server.dart';
+import 'package:fabric_weaver/src/config.dart';
+import 'package:fabric_weaver/src/server/shelf.dart';
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
+
+import 'server/google_cloud_functions.dart';
 
 final Logger log = Logger('weaver_application');
 final ArgParser argumentParser = ArgParser()
@@ -65,23 +67,49 @@ class WeaverApplication {
             : null);
     if (handler != null) {
       fabric.registerInstance(RequestHandler(handler));
-      var httpEnabled = fabric.getBool('server.enabled', defaultValue: true);
+      final httpEnabled = fabric.getBool('server.enabled', defaultValue: true);
       if (httpEnabled) {
-        WeaverServer(
-          handler: handler,
-          port: fabric.getInt('server.port'),
-        ).start();
+        final serverType =
+            fabric.getString('server.type', defaultValue: 'shelf');
+        switch (serverType) {
+          case 'shelf':
+            ShelfWeaverServer(
+              handler: handler,
+              port: fabric.getInt('server.port'),
+            ).start();
+            break;
+          case 'google-cloud-functions':
+            GoogleCloudFunctionsServer(
+              handler: handler,
+            ).start();
+            break;
+          default:
+            throw ArgumentError('Unknown server type: $serverType. '
+                'Known types are shelf and google-cloud-functions');
+        }
       }
     }
   }
 
   Handler _createRequestHandler(List<DispatcherBuilder> dispatcherBuilders) {
-    var dispatcher = createRequestDispatcher(dispatcherBuilders,
-        corsEnabled: fabric.getBool('server.cors.enabled', defaultValue: false),
-        allowedOrigins:
-            fabric.getString('server.cors.allowed-origins', defaultValue: ''));
-    var handler =
-        const Pipeline().addMiddleware(logRequests()).addHandler(dispatcher);
+    var dispatcher = createRequestDispatcher(
+      dispatcherBuilders,
+      corsEnabled: fabric.getBool('server.cors.enabled', defaultValue: false),
+      allowedOrigins: fabric.getString(
+        'server.cors.allowed-origins',
+        defaultValue: '',
+      ),
+    );
+    final logEnabled = fabric.getBool(
+      'server.log-requests',
+      defaultValue: true,
+    );
+    final serverType = fabric.getString('server.type', defaultValue: 'shelf');
+    var pipeline = Pipeline();
+    if (logEnabled && serverType == 'shelf') {
+      pipeline = pipeline.addMiddleware(logRequests());
+    }
+    var handler = pipeline.addHandler(dispatcher);
     return handler;
   }
 
