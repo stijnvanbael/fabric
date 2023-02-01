@@ -1,6 +1,6 @@
 name: fabric_weaver_generator
 description: Generator for Fabric Weaver
-version: 0.0.6
+version: 0.0.7
 
 environment:
   sdk: '>=2.16.2 <3.0.0'

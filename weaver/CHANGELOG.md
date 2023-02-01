@@ -1,3 +1,8 @@
+## 0.0.12
+
+- Hot reload
+-
+
 ## 0.0.11
 
 - Support Google Cloud Logging

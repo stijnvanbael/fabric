@@ -21,22 +21,25 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
       import 'weaver_box_registry.g.dart';
       import 'weaver_dispatcher.g.dart';
       
-      WeaverApplication startApplication({
+      late WeaverApplication application;
+      
+      Future<void> startApplication({
         Map<Spec, Factory> factories = const {},
         String configDir = '$folder/conf',
         List<String> arguments = const [],
-      }) {
-        var fabric = createFabric();
+      }) async {
+        final reloader = await enableHotReload();
+        final fabric = createFabric();
         registerDispatcherBuilders(fabric);
         registerBox(fabric);
-        var application = WeaverApplication(
+        application = WeaverApplication(
           fabric,
           factories: factories,
           configDir: configDir,
           arguments: arguments,
+          reloader: reloader,
         );
-        application.start();
-        return application;
+        await application.start();
       } 
     """;
   }

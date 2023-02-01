@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:args/args.dart';
 import 'package:box/box.dart';
@@ -9,8 +10,10 @@ import 'package:fabric_manager/fabric_manager.dart';
 import 'package:fabric_metadata/fabric_metadata.dart';
 import 'package:fabric_weaver/src/config.dart';
 import 'package:fabric_weaver/src/server/shelf.dart';
+import 'package:hotreloader/hotreloader.dart';
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
+import 'package:shutdown/shutdown.dart';
 
 import 'logging/google_cloud_logging.dart';
 import 'server/google_cloud_functions.dart';
@@ -25,18 +28,29 @@ class WeaverApplication {
   final Map<Spec, Factory> factories;
   final String configDir;
   final List<String> arguments;
+  final HotReloader? reloader;
 
   WeaverApplication(
     this.fabric, {
     this.factories = const {},
     required this.configDir,
     this.arguments = const [],
+    this.reloader,
   }) {
     _configureDefaults();
     _parseArguments();
+    _registerShutdownHook();
   }
 
   Future start() async {
+    _configureFabric();
+    _configureLogging();
+    _configureBox();
+    _configureSecurity();
+    _startHttpServer();
+  }
+
+  void _configureFabric() {
     var environment = fabric.getString('env');
     var secretsPath = fabric.getString('secrets');
     log.info(
@@ -52,10 +66,6 @@ class WeaverApplication {
     for (var entry in factories.entries) {
       fabric.register(entry.key, entry.value);
     }
-    _configureLogging();
-    _configureBox();
-    _configureSecurity();
-    _startHttpServer();
   }
 
   void _startHttpServer() {
@@ -175,6 +185,10 @@ class WeaverApplication {
       ));
     }
   }
+
+  void _registerShutdownHook() {
+    addHandler(() => reloader?.stop());
+  }
 }
 
 class RequestHandler {
@@ -183,4 +197,16 @@ class RequestHandler {
   RequestHandler(this._handler);
 
   FutureOr<Response> handle(Request request) => _handler(request);
+}
+
+Future<HotReloader?> enableHotReload() async {
+  if ((await Service.getInfo()).serverUri == null) {
+    print('ℹ️ Hot reload is not enabled, run with VM option '
+        '--enable-vm-service to enable');
+    return null;
+  } else {
+    print('🔥 Hot reload is enabled, application will reload automatically '
+        'after sources have been changed');
+  }
+  return await HotReloader.create();
 }

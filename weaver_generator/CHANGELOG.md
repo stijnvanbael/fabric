@@ -1,3 +1,7 @@
+## 0.0.7
+
+- Hot reload
+
 ## 0.0.6
 
 - Support controller dispatcher with security
