@@ -12,7 +12,7 @@ Create file `bin/server.dart` with contents:
 import '../lib/weaver_application.g.dart';
 
 main(List<String> arguments) async {
-  application = startApplication(arguments: arguments);
+  startApplication(arguments: arguments);
 }
 ```
 
