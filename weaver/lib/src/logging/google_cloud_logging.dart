@@ -2,13 +2,19 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 
+import 'meta_logger.dart';
+
 void configureGoogleCloudLogging() {
   Logger.root.onRecord.listen((record) {
+    final metaMessage = record.object as MetaMessage?;
     print(jsonEncode({
-      'logName': record.loggerName,
+      'logger': record.loggerName,
       'timestamp': record.time.toIso8601String(),
       'severity': _mapToCloudLogLevel(record.level),
       'message': record.message,
+      'metadata': metaMessage?.metadata,
+      'error': record.error?.toString(),
+      'stacktrace': record.stackTrace?.toString(),
     }));
   });
 }

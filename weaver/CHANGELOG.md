@@ -1,7 +1,10 @@
+## 0.0.13
+
+- Logging metadata
+
 ## 0.0.12
 
 - Hot reload
--
 
 ## 0.0.11
 

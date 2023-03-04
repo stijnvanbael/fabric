@@ -116,7 +116,11 @@ class WeaverApplication {
       defaultValue: true,
     );
     final serverType = fabric.getString('server.type', defaultValue: 'shelf');
-    var pipeline = Pipeline();
+    var pipeline =
+        Pipeline().addMiddleware((innerHandler) => (request) => runZoned(
+              () => innerHandler(request),
+              zoneValues: {#logging: <String, String>{}},
+            ));
     if (logEnabled && serverType == 'shelf') {
       pipeline = pipeline.addMiddleware(logRequests());
     }
@@ -142,7 +146,7 @@ class WeaverApplication {
       });
     }
     Logger('HttpUtils').level = Level.WARNING;
-    Logger('dns_llokup').level = Level.WARNING;
+    Logger('dns_lookup').level = Level.WARNING;
   }
 
   void _parseArguments() {

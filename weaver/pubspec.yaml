@@ -1,6 +1,6 @@
 name: fabric_weaver
 description: Application bootstrapper
-version: 0.0.12
+version: 0.0.13
 
 environment:
   sdk: '>=2.16.2 <3.0.0'
