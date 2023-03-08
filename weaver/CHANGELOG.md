@@ -1,3 +1,7 @@
+## 0.0.14
+
+- Configure Cloud Functions port with server.port
+
 ## 0.0.13
 
 - Logging metadata

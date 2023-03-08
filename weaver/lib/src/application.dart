@@ -92,6 +92,7 @@ class WeaverApplication {
           case 'google-cloud-functions':
             GoogleCloudFunctionsServer(
               handler: handler,
+              port: fabric.getInt('server.port'),
             ).start();
             break;
           default:

@@ -9,14 +9,16 @@ final Logger _log = Logger('google_cloud_functions_weaver_server');
 
 class GoogleCloudFunctionsServer {
   final Handler handler;
+  final int port;
 
   GoogleCloudFunctionsServer({
     required this.handler,
+    this.port = 8080,
   });
 
   Future start() async {
-    await serve([], _resolveFunctionName);
-    _log.info('Serving Google Cloud Function at 0.0.0.0:8080');
+    await serve(['--port=$port'], _resolveFunctionName);
+    _log.info('Serving Google Cloud Function at 0.0.0.0:$port');
   }
 
   FunctionTarget? _resolveFunctionName(String name) {
