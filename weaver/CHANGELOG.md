@@ -1,3 +1,8 @@
+## 0.0.15
+
+- Use functions for logging to automatically check for log level
+- Make logging metadata optional, report when not running zoned
+
 ## 0.0.14
 
 - Configure Cloud Functions port with server.port
