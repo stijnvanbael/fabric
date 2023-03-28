@@ -8,6 +8,7 @@ import 'package:controller/controller.dart';
 import 'package:dio/dio.dart' show Dio;
 import 'package:fabric_manager/fabric_manager.dart';
 import 'package:fabric_metadata/fabric_metadata.dart';
+import 'package:fabric_weaver/src/cipher/secure_string.dart';
 import 'package:fabric_weaver/src/config.dart';
 import 'package:fabric_weaver/src/server/shelf.dart';
 import 'package:hotreloader/hotreloader.dart';
@@ -47,6 +48,7 @@ class WeaverApplication {
     _configureLogging();
     _configureBox();
     _configureSecurity();
+    _configureCipher();
     _startHttpServer();
   }
 
@@ -188,6 +190,13 @@ class WeaverApplication {
         issuerUri: Uri.parse(issuerUri),
         clientId: fabric.getString('security.client-id'),
       ));
+    }
+  }
+
+  void _configureCipher() {
+    final cipherKey = fabric.getString('cipher.key', defaultValue: '');
+    if (cipherKey.isNotEmpty) {
+      cipher = Cipher(cipherKey);
     }
   }
 

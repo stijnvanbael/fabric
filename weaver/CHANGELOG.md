@@ -1,3 +1,7 @@
+## 0.0.16
+
+- Added Cipher and SecureString for encrypting data
+
 ## 0.0.15
 
 - Use functions for logging to automatically check for log level
