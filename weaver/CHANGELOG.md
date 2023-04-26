@@ -1,3 +1,7 @@
+## 0.0.17
+
+- Disable Cipher decryption by default. Enable via `cipher.decrypt`
+
 ## 0.0.16
 
 - Added Cipher and SecureString for encrypting data

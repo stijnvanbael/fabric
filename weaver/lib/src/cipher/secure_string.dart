@@ -16,10 +16,15 @@ class SecureString {
 class Cipher {
   final IV _iv = IV.fromLength(16);
   final Encrypter _encrypter;
+  final bool decryptionEnabled;
 
-  Cipher(String key) : _encrypter = Encrypter(AES(Key.fromUtf8(key)));
+  Cipher(
+    String key, {
+    this.decryptionEnabled = false,
+  }) : _encrypter = Encrypter(AES(Key.fromUtf8(key)));
 
   String encrypt(String string) => _encrypter.encrypt(string, iv: _iv).base64;
 
-  String decrypt(String encrypted) => _encrypter.decrypt64(encrypted, iv: _iv);
+  String decrypt(String encrypted) =>
+      decryptionEnabled ? _encrypter.decrypt64(encrypted, iv: _iv) : "********";
 }

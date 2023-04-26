@@ -195,8 +195,10 @@ class WeaverApplication {
 
   void _configureCipher() {
     final cipherKey = fabric.getString('cipher.key', defaultValue: '');
+    final decryptionEnabled =
+        fabric.getBool('cipher.decrypt', defaultValue: false);
     if (cipherKey.isNotEmpty) {
-      cipher = Cipher(cipherKey);
+      cipher = Cipher(cipherKey, decryptionEnabled: decryptionEnabled);
     }
   }
 
