@@ -1,3 +1,7 @@
+## 0.0.18+1
+
+- Extracted SecureString in cihper_string library
+
 ## 0.0.18
 
 - Update dependencies to latest versions for Dart 2.x
