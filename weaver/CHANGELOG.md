@@ -1,3 +1,7 @@
+## 0.0.18
+
+- Update dependencies to latest versions for Dart 2.x
+
 ## 0.0.17
 
 - Disable Cipher decryption by default. Enable via `cipher.decrypt`

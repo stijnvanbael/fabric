@@ -1,3 +1,7 @@
+## 0.0.8
+
+- Update dependencies to latest versions
+
 ## 0.0.7
 
 - Hot reload

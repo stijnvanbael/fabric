@@ -1,3 +1,7 @@
+## 0.0.7
+
+- Updated dependencies to latest version
+
 ## 0.0.6
 
 - Support for nullable @Config injection
