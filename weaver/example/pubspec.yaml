@@ -1,7 +1,7 @@
 name: fabric_weaver_example
 
 environment:
-  sdk: '>=2.16.2 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   fabric_weaver:

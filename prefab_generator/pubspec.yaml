@@ -1,0 +1,21 @@
+name: fabric_prefab_generator
+description: Generator for Fabric Prefab
+version: 0.0.1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  analyzer: ^6.2.0
+  build: ^2.4.1
+  source_gen: ^1.4.0
+  fabric_prefab:
+    path: ../prefab
+  merging_builder_svb:
+    path: ../../merging_builder
+  fabric_weaver_generator:
+    path: ../weaver_generator
+
+dev_dependencies:
+  lints: ^2.0.1
+  test: ^1.24.2

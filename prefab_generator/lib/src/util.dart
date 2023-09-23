@@ -7,7 +7,6 @@ extension ElementHasMeta on Element {
       .any((element) => isType(element.computeConstantValue()!.type!, meta));
 }
 
-
 bool isType(DartType typeToTest, Type expectedType) =>
     typeToTest.accept(TypeChecker(expectedType));
 

@@ -1,0 +1,16 @@
+name: fabric_prefab
+description: Rapid application development framework
+version: 0.0.1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  fabric_weaver:
+    path: ../weaver
+
+dev_dependencies:
+  fabric_prefab_generator:
+    path: ../prefab_generator
+  lints: ^2.0.1
+  test: ^1.24.2

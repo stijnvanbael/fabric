@@ -22,8 +22,11 @@ class TodoController {
 
   @Post('/todos')
   Future<Response> addTodo(@body Todo todo) async {
-    await repository.save(todo);
-    return Response.ok(message);
+    final created = await repository.save(todo);
+    return Response(201, body: message, headers: {
+      'content-type': 'application/json',
+      'location': '/todos/$created'
+    });
   }
 
   @Get('/todos/:id')

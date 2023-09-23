@@ -42,6 +42,9 @@ class TypeChecker implements TypeVisitor<bool> {
 
   @override
   bool visitRecordType(RecordType type) => false;
+
+  @override
+  bool visitInvalidType(InvalidType type) => false;
 }
 
 extension IterableExtension<T> on Iterable<T> {
