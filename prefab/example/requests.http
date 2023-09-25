@@ -8,3 +8,7 @@ content-type: application/json
 ###
 
 GET http://localhost:8080/todos/book-ski-trip
+
+###
+
+POST http://localhost:8080/todos/book-ski-trip/done

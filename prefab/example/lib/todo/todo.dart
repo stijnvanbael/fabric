@@ -1,7 +1,7 @@
 import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:recase/recase.dart';
-part 'todo.g.dart';
 
+part 'todo.g.dart';
 part 'todo.prefab.g.dart';
 
 @Prefab(useCases: {create, getByKey})

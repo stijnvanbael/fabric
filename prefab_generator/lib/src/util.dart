@@ -1,10 +1,23 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
+import 'package:source_gen/source_gen.dart';
 
 extension ElementHasMeta on Element {
   bool hasMeta(Type meta) => metadata
       .any((element) => isType(element.computeConstantValue()!.type!, meta));
+
+  ConstantReader? getMeta<T>() => metadata
+      .map((element) {
+        var value = element.computeConstantValue();
+        if (isType(value!.type!, T)) {
+          return value;
+        }
+        return null;
+      })
+      .where((value) => value != null)
+      .map((value) => ConstantReader(value!))
+      .firstOrNull;
 }
 
 bool isType(DartType typeToTest, Type expectedType) =>

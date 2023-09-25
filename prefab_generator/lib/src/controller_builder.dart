@@ -18,7 +18,10 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
     }
     final clazz = element as ClassElement;
     final entityName = clazz.name;
-    final useCases = annotation.objectValue.getField('useCases')!.toSetValue()!;
+    final standardUseCases =
+        annotation.objectValue.getField('useCases')!.toSetValue()!;
+    final customUseCases =
+        clazz.methods.where((element) => element.hasMeta(UseCase)).toList();
     return '''
     @controller
     @managed
@@ -29,12 +32,14 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
         this._repository,
       );
       
-      ${useCases.map((useCase) => _controllerMethod(useCase, clazz)).join('\n\n')}
+      ${standardUseCases.map((useCase) => _standardUseCase(useCase, clazz)).join('\n\n')}
+      
+      ${customUseCases.map((useCase) => _customUseCase(useCase, clazz)).join('\n\n')}
     }
     ''';
   }
 
-  String _controllerMethod(DartObject useCase, ClassElement clazz) {
+  String _standardUseCase(DartObject useCase, ClassElement clazz) {
     final entityName = clazz.name;
     final keyField = clazz.fields
         .where((field) =>
@@ -75,11 +80,38 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
     return '''
     @Get('/${entityName.paramCase}s/:${keyField.name}')
     Future<Response> get$entityName(${keyField.type.getDisplayString(withNullability: false)} ${keyField.name}) async {
-      var ${entityName.camelCase} = await _repository.findBy${keyField.name.pascalCase}(${keyField.name});
+      final ${entityName.camelCase} = await _repository.findBy${keyField.name.pascalCase}(${keyField.name});
       if (${entityName.camelCase} == null) {
         return Response.notFound("No ${entityName.sentenceCase.toLowerCase()} found with ${keyField.name} \$${keyField.name}");
       }
       return Response.ok(jsonEncode(${entityName.camelCase}.toJson()));
+    }
+    ''';
+  }
+
+  String _customUseCase(
+    MethodElement method,
+    ClassElement clazz,
+  ) {
+    final entityName = clazz.name;
+    final keyField = clazz.fields
+        .where((field) =>
+            !field.isStatic && !field.isPrivate && field.hasMeta(Key))
+        .first;
+    final request = method.getMeta<UseCase>()!.read('request');
+    // TODO: parameters
+    final httpMethod = request.read('method').stringValue.pascalCase;
+    final path = request.read('path').stringValue;
+    return '''
+    @$httpMethod('/${entityName.paramCase}s/:${keyField.name}$path')
+    Future<Response> ${method.name}(${keyField.type.getDisplayString(withNullability: false)} ${keyField.name}) async {
+      final ${entityName.camelCase} = await _repository.findBy${keyField.name.pascalCase}(${keyField.name});
+      if (${entityName.camelCase} == null) {
+        return Response.notFound("No ${entityName.sentenceCase.toLowerCase()} found with ${keyField.name} \$${keyField.name}");
+      }
+      final updated = ${entityName.camelCase}.${method.name}();
+      await _repository.save(updated);
+      return Response.ok(jsonEncode(updated.toJson()));
     }
     ''';
   }
