@@ -36,6 +36,8 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
       
       ${customUseCases.map((useCase) => _customUseCase(useCase, clazz)).join('\n\n')}
     }
+    
+    ${customUseCases.map((useCase) => _useCaseRequest(useCase, clazz)).join('\n\n')}
     ''';
   }
 
@@ -99,19 +101,52 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
             !field.isStatic && !field.isPrivate && field.hasMeta(Key))
         .first;
     final request = method.getMeta<UseCase>()!.read('request');
-    // TODO: parameters
     final httpMethod = request.read('method').stringValue.pascalCase;
     final path = request.read('path').stringValue;
+    var requestBody = method.parameters.isNotEmpty
+        ? ', @body ${entityName.pascalCase}\$${method.name.pascalCase}Request request'
+        : '';
     return '''
     @$httpMethod('/${entityName.paramCase}s/:${keyField.name}$path')
-    Future<Response> ${method.name}(${keyField.type.getDisplayString(withNullability: false)} ${keyField.name}) async {
+    Future<Response> ${method.name}(${_parameter(keyField)}$requestBody) async {
       final ${entityName.camelCase} = await _repository.findBy${keyField.name.pascalCase}(${keyField.name});
       if (${entityName.camelCase} == null) {
         return Response.notFound("No ${entityName.sentenceCase.toLowerCase()} found with ${keyField.name} \$${keyField.name}");
       }
-      final updated = ${entityName.camelCase}.${method.name}();
+      final updated = ${entityName.camelCase}.${method.name}(${_arguments('request.', method.parameters)});
       await _repository.save(updated);
       return Response.ok(jsonEncode(updated.toJson()));
+    }
+    ''';
+  }
+
+  String _parameter(VariableElement parameter) =>
+      '${parameter.type.getDisplayString(withNullability: true)} ${parameter.name}';
+
+  String _arguments(String prefix, List<VariableElement> variables) =>
+      variables.map((variable) => prefix + variable.name).join(', ');
+
+  String _useCaseRequest(
+    MethodElement method,
+    ClassElement clazz,
+  ) {
+    if (method.parameters.isEmpty) {
+      return '';
+    }
+    final entityName = clazz.name;
+    final requestName =
+        '${entityName.pascalCase}\$${method.name.pascalCase}Request';
+    return '''
+    @JsonSerializable(createToJson: false)
+    @validatable
+    class $requestName {
+      ${method.parameters.map(_parameter).map((p) => '$p;').join('\n')}
+      
+      $requestName(
+        ${method.parameters.map((p) => 'this.${p.name},').join('\n')}
+      );
+      
+      static $requestName fromJson(Map<String, dynamic> json) => _\$${requestName}FromJson(json);
     }
     ''';
   }

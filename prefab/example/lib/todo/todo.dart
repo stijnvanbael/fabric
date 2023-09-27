@@ -20,5 +20,8 @@ class Todo {
   @UseCase(Post('/done'))
   Todo markAsDone() => copy(done: true);
 
+  @UseCase(Put('/description'))
+  Todo updateDescription(String description) => copy(description: description);
+
   static Todo fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
 }

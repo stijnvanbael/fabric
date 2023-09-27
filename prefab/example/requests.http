@@ -12,3 +12,12 @@ GET http://localhost:8080/todos/book-ski-trip
 ###
 
 POST http://localhost:8080/todos/book-ski-trip/done
+
+###
+
+PUT http://localhost:8080/todos/book-ski-trip/description
+content-type: application/json
+
+{
+  "description": "Book two ski trips"
+}
