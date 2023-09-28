@@ -3,10 +3,13 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:fabric_prefab_generator/src/util.dart';
+import 'package:logging/logging.dart';
 import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
 
 class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
+  final Logger logger = Logger('ControllerBuilder');
+
   @override
   generateForAnnotatedElement(
     Element element,
@@ -52,7 +55,7 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
     } else if (isType(useCase.type!, GetByKey)) {
       return _getByKeyMethod(clazz, entityName, keyField);
     } else {
-      print('[WARNING] unknown use case: $useCase');
+      logger.warning('Unknown use case: $useCase');
       return '';
     }
   }
@@ -103,9 +106,12 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
     final request = method.getMeta<UseCase>()!.read('request');
     final httpMethod = request.read('method').stringValue.pascalCase;
     final path = request.read('path').stringValue;
-    var requestBody = method.parameters.isNotEmpty
+    final requestBody = method.parameters.isNotEmpty
         ? ', @body ${entityName.pascalCase}\$${method.name.pascalCase}Request request'
         : '';
+    final update = method.returnType.element == clazz
+        ? _immutableUpdate(entityName, method)
+        : _mutableUpdate(entityName, method);
     return '''
     @$httpMethod('/${entityName.paramCase}s/:${keyField.name}$path')
     Future<Response> ${method.name}(${_parameter(keyField)}$requestBody) async {
@@ -113,11 +119,27 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
       if (${entityName.camelCase} == null) {
         return Response.notFound("No ${entityName.sentenceCase.toLowerCase()} found with ${keyField.name} \$${keyField.name}");
       }
+      $update
+    }
+    ''';
+  }
+
+  String _immutableUpdate(String entityName, MethodElement method) => '''
       final updated = ${entityName.camelCase}.${method.name}(${_arguments('request.', method.parameters)});
       await _repository.save(updated);
       return Response.ok(jsonEncode(updated.toJson()));
-    }
-    ''';
+      ''';
+
+  String _mutableUpdate(String entityName, MethodElement method) {
+    logger.warning('Update use case $entityName.${method.name}() does not have'
+        ' $entityName, assuming it modifies the object itself. This is not'
+        ' advised, it is safer to make entities immutable and have use cases'
+        ' return a copy of the entity.');
+    return '''
+      ${entityName.camelCase}.${method.name}(${_arguments('request.', method.parameters)});
+      await _repository.save(${entityName.camelCase});
+      return Response.ok(jsonEncode(${entityName.camelCase}.toJson()));
+      ''';
   }
 
   String _parameter(VariableElement parameter) =>
