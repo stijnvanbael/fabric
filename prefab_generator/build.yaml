@@ -1,7 +1,7 @@
 builders:
   prefab_generator:
     import: "package:fabric_prefab_generator/fabric_prefab_generator.dart"
-    builder_factories: [ "prefabBuilder" ]
+    builder_factories: [ "defaultExtensions", "prefabBuilder" ]
     build_extensions: { ".dart": [ ".prefab.g.dart" ] }
     auto_apply: dependents
     build_to: source

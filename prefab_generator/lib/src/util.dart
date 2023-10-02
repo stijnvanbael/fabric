@@ -1,17 +1,18 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
+import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:pluralize/pluralize.dart';
 import 'package:source_gen/source_gen.dart';
 
 extension ElementHasMeta on Element {
   bool hasMeta(Type meta) => metadata
-      .any((element) => isType(element.computeConstantValue()!.type!, meta));
+      .any((element) => element.computeConstantValue()!.type!.isType(meta));
 
   ConstantReader? getMeta<T>() => metadata
       .map((element) {
         var value = element.computeConstantValue();
-        if (isType(value!.type!, T)) {
+        if (value!.type!.isType(T)) {
           return value;
         }
         return null;
@@ -21,8 +22,16 @@ extension ElementHasMeta on Element {
       .firstOrNull;
 }
 
-bool isType(DartType typeToTest, Type expectedType) =>
-    typeToTest.accept(TypeChecker(expectedType));
+extension DartTypeExtensions on DartType {
+  bool isType(Type expected) => accept(TypeChecker(expected));
+}
+
+extension ClassElementExtensions on ClassElement {
+  FieldElement get keyField => fields
+      .where(
+          (field) => !field.isStatic && !field.isPrivate && field.hasMeta(Key))
+      .first;
+}
 
 class TypeChecker implements TypeVisitor<bool> {
   final Type expectedType;
