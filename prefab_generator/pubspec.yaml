@@ -9,6 +9,7 @@ dependencies:
   analyzer: ^6.2.0
   build: ^2.4.1
   source_gen: ^1.4.0
+  pluralize: ^0.0.8
   fabric_prefab:
     path: ../prefab
   merging_builder_svb:

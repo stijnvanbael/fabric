@@ -17,11 +17,12 @@ class RepositoryBuilder extends GeneratorForAnnotation<Prefab> {
     }
     final clazz = element as ClassElement;
     final entityName = element.name;
-    final keyField = clazz.fields
-        .where((field) =>
-            !field.isStatic && !field.isPrivate && field.hasMeta(Key))
-        .first;
+    final fields = clazz.fields
+        .where((field) => !field.isStatic && !field.isPrivate)
+        .toList();
+    final keyField = fields.where((field) => field.hasMeta(Key)).first;
     var keyType = keyField.type.getDisplayString(withNullability: false);
+    var nonKeyFields = fields.where((f) => !f.hasMeta(Key));
     return '''
     @managed
     class $entityName\$Repository {
@@ -32,7 +33,24 @@ class RepositoryBuilder extends GeneratorForAnnotation<Prefab> {
       Future<$keyType> save($entityName ${entityName.camelCase}) => _box.store(${entityName.camelCase});
     
       Future<$entityName?> findBy${keyField.name.pascalCase}($keyType ${keyField.name}) => _box.find<$entityName>(${keyField.name});
+      
+      Future<List<$entityName>> search(
+      ${entityName.pascalCase}\$Field? orderBy,
+      SortDirection direction,
+      ${nonKeyFields.map((f) => _parameter(f, Nullability.nullable)).join(',')}
+      ) =>
+        _box
+          .selectFrom<$entityName>()
+          .filterWith(${entityName.pascalCase}\$Field.values, [${nonKeyFields.map((f) => f.name).join(',')}])
+          .orderByWith(orderBy, direction)
+          .list();
     }
-    ''';
+    '''; // TODO: query fields
   }
+
+  String _parameter(
+    VariableElement parameter, [
+    Nullability nullability = Nullability.inherit,
+  ]) =>
+      '${nullability.outputType(parameter)} ${parameter.name}';
 }

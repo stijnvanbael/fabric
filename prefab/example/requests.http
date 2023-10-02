@@ -2,12 +2,16 @@ POST http://localhost:8080/todos
 content-type: application/json
 
 {
-  "description": "Book ski trip"
+  "description": "Catch some z's"
 }
 
 ###
 
 GET http://localhost:8080/todos/book-ski-trip
+
+###
+
+GET http://localhost:8080/todos?done=false&orderBy=created&direction=descending
 
 ###
 

@@ -5,6 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 const Create create = Create();
 const Update update = Update();
 const GetByKey getByKey = GetByKey();
+const Search search = Search();
 
 class Prefab extends JsonSerializable implements Entity, Validatable {
   @override
@@ -23,6 +24,11 @@ class GetByKey extends UseCase {
       : super(request); // Replace :id with key placeholder
 }
 
+class Search extends UseCase {
+  const Search([HttpRequest request = const Get('')])
+      : super(request); // Replace :id with key placeholder
+}
+
 class Update extends UseCase {
   const Update([HttpRequest request = const Put('')]) : super(request);
 }
@@ -32,3 +38,5 @@ abstract class UseCase {
 
   const UseCase(this.request);
 }
+
+enum SortDirection { ascending, descending }

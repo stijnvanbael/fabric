@@ -15,7 +15,7 @@ class ExtensionBuilder extends GeneratorForAnnotation<Prefab> {
         .whereType<ConstructorElement>()
         .map((constructor) => constructor.parameters)
         .first;
-    final entityName = element.name!;
+    final entityName = element.name;
     return '''
     extension $entityName\$Prefab on $entityName {
       $entityName copy({

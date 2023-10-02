@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
+import 'package:pluralize/pluralize.dart';
 import 'package:source_gen/source_gen.dart';
 
 extension ElementHasMeta on Element {
@@ -55,4 +56,25 @@ class TypeChecker implements TypeVisitor<bool> {
 
   @override
   bool visitInvalidType(InvalidType type) => false;
+}
+
+enum Nullability {
+  nullable(false, '?'),
+  notNull(false, ''),
+  inherit(true, '');
+
+  final bool _inherit;
+  final String _suffix;
+
+  const Nullability(this._inherit, this._suffix);
+
+  String outputType(VariableElement element) {
+    return element.type.getDisplayString(withNullability: _inherit) + _suffix;
+  }
+}
+
+extension PluralString on String {
+  static final Pluralize _pluralize = Pluralize();
+
+  String get plural => _pluralize.plural(this);
 }
