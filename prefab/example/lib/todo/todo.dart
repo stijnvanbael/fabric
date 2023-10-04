@@ -1,4 +1,5 @@
 import 'package:fabric_prefab/fabric_prefab.dart';
+import 'package:fabric_prefab_example/todo/todo_controller.dart';
 import 'package:recase/recase.dart';
 
 part 'todo.g.dart';
@@ -8,6 +9,8 @@ part 'todo.prefab.g.dart';
   create,
   getByKey,
   search
+}, controllerMixins: {
+  TodoController,
 }) // Move create to the constructor, also allow create on factory methods
 class Todo {
   @key

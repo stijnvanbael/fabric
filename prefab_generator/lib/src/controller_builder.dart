@@ -23,12 +23,17 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
     final entityName = clazz.name;
     final standardUseCases =
         annotation.objectValue.getField('useCases')!.toSetValue()!;
+    final mixins =
+        annotation.objectValue.getField('controllerMixins')!.toSetValue()!;
     final customUseCases =
         clazz.methods.where((element) => element.hasMeta(UseCase)).toList();
+    var mixinsClause = mixins.isNotEmpty
+        ? ' with ${mixins.map((mixin) => mixin.toTypeValue()!.element!.name).join(',')}'
+        : '';
     return '''
     @controller
     @managed
-    class $entityName\$Controller {
+    class $entityName\$Controller$mixinsClause {
       final $entityName\$Repository _repository;
       
       $entityName\$Controller(

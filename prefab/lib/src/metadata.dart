@@ -11,8 +11,13 @@ class Prefab extends JsonSerializable implements Entity, Validatable {
   @override
   final String? name;
   final Set<UseCase> useCases;
+  final Set<Type> controllerMixins;
 
-  const Prefab({this.name, this.useCases = const {}});
+  const Prefab({
+    this.name,
+    this.useCases = const {},
+    this.controllerMixins = const {},
+  });
 }
 
 class Create extends UseCase {
