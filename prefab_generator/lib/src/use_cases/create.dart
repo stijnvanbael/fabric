@@ -2,7 +2,6 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:fabric_prefab_generator/src/use_cases/use_case_builder.dart';
 import 'package:fabric_prefab_generator/src/util.dart';
-import 'package:recase/recase.dart';
 
 class CreateBuilder extends UseCaseBuilder<ClassElement, Create> {
   @override
@@ -10,9 +9,9 @@ class CreateBuilder extends UseCaseBuilder<ClassElement, Create> {
     final entityName = clazz.name;
     final keyField = clazz.keyField;
     return '''
-      @Post('/${entityName.paramCase.plural}')
+      @Post('/api/${entityName.paramCase.plural}')
       Future<Response> create$entityName(@body $entityName ${entityName.camelCase}) async {
-        final ${keyField.name} = await _repository.save(${entityName.camelCase});
+        final ${keyField.name} = await repository.save(${entityName.camelCase});
         return Response(201, headers: {
           'content-type': 'application/json',
           'location': '/todos/\$${keyField.name}'

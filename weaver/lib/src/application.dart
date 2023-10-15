@@ -14,6 +14,7 @@ import 'package:fabric_weaver/src/server/shelf.dart';
 import 'package:hotreloader/hotreloader.dart';
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
+import 'package:shelf_static/shelf_static.dart';
 import 'package:shutdown/shutdown.dart';
 
 import 'logging/google_cloud_logging.dart';
@@ -106,14 +107,13 @@ class WeaverApplication {
   }
 
   Handler _createRequestHandler(List<DispatcherBuilder> dispatcherBuilders) {
-    var dispatcher = createRequestDispatcher(
-      dispatcherBuilders,
-      corsEnabled: fabric.getBool('server.cors.enabled', defaultValue: false),
-      allowedOrigins: fabric.getString(
-        'server.cors.allowed-origins',
-        defaultValue: '',
-      ),
-    );
+    var dispatcher = createRequestDispatcher(dispatcherBuilders,
+        corsEnabled: fabric.getBool('server.cors.enabled', defaultValue: false),
+        allowedOrigins: fabric.getString(
+          'server.cors.allowed-origins',
+          defaultValue: '',
+        ),
+        defaultHandler: createStaticHandler('web'));
     final logEnabled = fabric.getBool(
       'server.log-requests',
       defaultValue: true,

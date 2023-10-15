@@ -3,7 +3,6 @@ import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:fabric_prefab_generator/src/use_cases/use_case_builder.dart';
 import 'package:fabric_prefab_generator/src/util.dart';
 import 'package:logging/logging.dart';
-import 'package:recase/recase.dart';
 
 class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
   final Logger logger = Logger('UpdateBuilder');
@@ -25,9 +24,9 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
         ? _immutableUpdate(entityName, element)
         : _mutableUpdate(entityName, element);
     return '''
-    @$httpMethod('/${entityName.paramCase.plural}/:${keyField.name}$path')
+    @$httpMethod('/api/${entityName.paramCase.plural}/:${keyField.name}$path')
     Future<Response> ${element.name}(${_parameter(keyField)}$requestBody) async {
-      final ${entityName.camelCase} = await _repository.findBy${keyField.name.pascalCase}(${keyField.name});
+      final ${entityName.camelCase} = await repository.findBy${keyField.name.pascalCase}(${keyField.name});
       if (${entityName.camelCase} == null) {
         return Response.notFound("No ${entityName.sentenceCase.toLowerCase()} found with ${keyField.name} \$${keyField.name}");
       }
@@ -61,7 +60,7 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
 
   String _immutableUpdate(String entityName, MethodElement method) => '''
       final updated = ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')});
-      await _repository.save(updated);
+      await repository.save(updated);
       return Response.ok(jsonEncode(updated.toJson()));
       ''';
 
@@ -72,7 +71,7 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
         ' return a copy of the entity.');
     return '''
       ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')});
-      await _repository.save(${entityName.camelCase});
+      await repository.save(${entityName.camelCase});
       return Response.ok(jsonEncode(${entityName.camelCase}.toJson()));
       ''';
   }

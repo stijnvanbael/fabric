@@ -15,7 +15,7 @@ abstract class UseCaseBuilder<E extends Element, T> extends Generator {
     _useCaseRegistry[T] = this;
   }
 
-  static List<UseCaseBuilder> get defaults =>
+  static List<Generator> get defaults =>
       [CreateBuilder(), GetByKeyBuilder(), SearchBuilder(), UpdateBuilder()];
 
   static String controllerMethod(

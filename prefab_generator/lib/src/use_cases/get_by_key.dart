@@ -11,9 +11,9 @@ class GetByKeyBuilder extends UseCaseBuilder<ClassElement, GetByKey> {
     final entityName = clazz.name;
     final keyField = clazz.keyField;
     return '''
-    @Get('/${entityName.paramCase.plural}/:${keyField.name}')
+    @Get('/api/${entityName.paramCase.plural}/:${keyField.name}')
     Future<Response> get$entityName(${keyField.type.getDisplayString(withNullability: false)} ${keyField.name}) async {
-      final ${entityName.camelCase} = await _repository.findBy${keyField.name.pascalCase}(${keyField.name});
+      final ${entityName.camelCase} = await repository.findBy${keyField.name.pascalCase}(${keyField.name});
       if (${entityName.camelCase} == null) {
         return Response.notFound("No ${entityName.sentenceCase.toLowerCase()} found with ${keyField.name} \$${keyField.name}");
       }

@@ -1,6 +1,7 @@
 import 'package:box/box.dart';
 import 'package:controller/controller.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:templatr/shoelace.dart';
 
 const Create create = Create();
 const Update update = Update();
@@ -12,11 +13,13 @@ class Prefab extends JsonSerializable implements Entity, Validatable {
   final String? name;
   final Set<UseCase> useCases;
   final Set<Type> controllerMixins;
+  final Frontend? frontend;
 
   const Prefab({
     this.name,
     this.useCases = const {},
     this.controllerMixins = const {},
+    this.frontend,
   });
 }
 
@@ -45,3 +48,15 @@ abstract class UseCase {
 }
 
 enum SortDirection { ascending, descending }
+
+abstract class Frontend {
+  final String name;
+
+  const Frontend(this.name);
+}
+
+class BasicFrontend extends Frontend {
+  final Icon? icon;
+
+  const BasicFrontend(this.icon) : super('basic');
+}

@@ -4,14 +4,13 @@ import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:fabric_prefab_generator/src/use_cases/use_case_builder.dart';
 import 'package:fabric_prefab_generator/src/util.dart';
 import 'package:logging/logging.dart';
-import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
 
 class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
   final Logger logger = Logger('ControllerBuilder');
 
   @override
-  generateForAnnotatedElement(
+  String generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
@@ -34,10 +33,14 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
     @controller
     @managed
     class $entityName\$Controller$mixinsClause {
-      final $entityName\$Repository _repository;
+      @override
+      final $entityName\$Repository repository;
+      @override
+      final ApplicationFrontendTemplate frontend;
       
       $entityName\$Controller(
-        this._repository,
+        this.repository,
+        this.frontend,
       );
       
       ${standardUseCases.map((useCase) => UseCaseBuilder.controllerMethod(useCase, clazz, clazz)).join('\n\n')}

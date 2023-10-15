@@ -1,17 +1,16 @@
 import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:fabric_prefab_example/todo/todo_controller.dart';
-import 'package:recase/recase.dart';
+
+import '../prefab_frontend.g.dart';
 
 part 'todo.g.dart';
 part 'todo.prefab.g.dart';
 
-@Prefab(useCases: {
-  create,
-  getByKey,
-  search
-}, controllerMixins: {
-  TodoController,
-}) // Move create to the constructor, also allow create on factory methods
+@Prefab(
+  useCases: {create, getByKey, search},
+  controllerMixins: {TodoController},
+  frontend: BasicFrontend(Icon.clipboardCheck),
+)
 class Todo {
   @key
   final String id;
@@ -34,8 +33,8 @@ class Todo {
   Todo updateDescription(String description) => copy(description: description);
 
   // Bad example: does not have Todo as return type, assumed it mutates the entity
-  @Update(Post('/clueless'))
-  void noClue() {}
+  @Update(Post('/bad-example'))
+  void badExample() {}
 
   static Todo fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
 }

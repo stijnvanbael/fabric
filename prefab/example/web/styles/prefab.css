@@ -1,0 +1,20 @@
+:root {
+    --sidebar-width: 300px;
+    font-family: var(--sl-font-sans);
+}
+
+aside {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: calc(var(--sidebar-width) - (2 * var(--sl-spacing-medium)));
+    padding: var(--sl-spacing-medium);
+    border-right: 1px solid;
+    border-color: var(--sl-color-gray-80);
+}
+
+main {
+    margin-left: var(--sidebar-width);
+    padding: var(--sl-spacing-medium);
+}

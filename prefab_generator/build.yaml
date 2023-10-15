@@ -1,11 +1,20 @@
 builders:
-  prefab_generator:
-    import: "package:fabric_prefab_generator/fabric_prefab_generator.dart"
+  prefab_backend_generator:
+    import: "package:fabric_prefab_generator/fabric_prefab_backend_generator.dart"
     builder_factories: [ "defaultExtensions", "prefabBuilder" ]
     build_extensions: { ".dart": [ ".prefab.g.dart" ] }
     auto_apply: dependents
     build_to: source
     applies_builders: [ "source_gen|combining_builder" ]
+
+  prefab_frontend_generator:
+    import: "package:fabric_prefab_generator/fabric_prefab_frontend_generator.dart"
+    builder_factories: [ "templateBuilder" ]
+    build_extensions: { "*/$package$": [ "prefab.g.dart" ] }
+    auto_apply: dependents
+    build_to: source
+    defaults:
+      options: { "folder": "lib" }
 
   controller_generator:
     import: "package:controller_generator/controller_generator.dart"
