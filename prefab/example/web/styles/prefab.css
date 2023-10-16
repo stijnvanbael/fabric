@@ -11,10 +11,39 @@ aside {
     width: calc(var(--sidebar-width) - (2 * var(--sl-spacing-medium)));
     padding: var(--sl-spacing-medium);
     border-right: 1px solid;
-    border-color: var(--sl-color-gray-80);
+    border-color: var(--sl-color-gray-90);
 }
 
 main {
     margin-left: var(--sidebar-width);
     padding: var(--sl-spacing-medium);
+    max-width: 80rem;
+}
+
+.panel {
+    border: 1px solid;
+    border-color: var(--sl-color-gray-90);
+    border-radius: var(--sl-border-radius-medium);
+    padding: var(--sl-spacing-large);
+    overflow: auto;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 30rem;
+}
+
+tr {
+    border-bottom: 1px solid;
+    border-color: var(--sl-color-gray-90);
+}
+
+td, th {
+    padding: var(--sl-spacing-medium);
+    text-align: left;
+}
+
+th {
+    font-weight: var(--sl-font-weight-semibold);
 }
