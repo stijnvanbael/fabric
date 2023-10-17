@@ -6,7 +6,7 @@ import 'package:fabric_prefab_generator/src/util.dart';
 import 'package:logging/logging.dart';
 import 'package:source_gen/source_gen.dart';
 
-class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
+class ApiControllerBuilder extends GeneratorForAnnotation<Prefab> {
   final Logger logger = Logger('ControllerBuilder');
 
   @override
@@ -32,13 +32,11 @@ class ControllerBuilder extends GeneratorForAnnotation<Prefab> {
     return '''
     @controller
     @managed
-    class $entityName\$Controller$mixinsClause {
-      @override
+    class $entityName\$ApiController$mixinsClause {
       final $entityName\$Repository repository;
-      @override
       final ApplicationFrontendTemplate frontend;
       
-      $entityName\$Controller(
+      $entityName\$ApiController(
         this.repository,
         this.frontend,
       );

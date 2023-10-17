@@ -1,5 +1,5 @@
 import 'package:fabric_prefab/fabric_prefab.dart';
-import 'package:fabric_prefab_example/todo/todo_controller.dart';
+import 'package:templatr/shoelace.dart';
 
 import '../prefab_frontend.g.dart';
 
@@ -8,7 +8,6 @@ part 'todo.prefab.g.dart';
 
 @Prefab(
   useCases: {create, getByKey, search},
-  controllerMixins: {TodoController},
   frontend: BasicFrontend(Icon.clipboardCheck),
 )
 class Todo {

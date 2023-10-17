@@ -8,10 +8,9 @@ export 'package:fabric_metadata/fabric_metadata.dart';
 export 'package:json_annotation/json_annotation.dart';
 export 'package:recase/recase.dart';
 export 'package:shelf/shelf.dart';
-export 'package:templatr/shoelace.dart';
 
-export 'src/frontend/basic.dart';
 export 'src/domain.dart';
+export 'src/frontend/basic.dart';
 export 'src/metadata.dart';
 export 'src/repository.dart';
 export 'src/util.dart';

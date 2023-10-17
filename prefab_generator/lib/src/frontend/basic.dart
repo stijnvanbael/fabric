@@ -18,6 +18,8 @@ class BasicFrontendBuilder extends FrontendBuilder {
     
     @managed
     class ApplicationFrontendTemplate extends BasicFrontendTemplate {
+      ApplicationFrontendTemplate(Registry registry) : super(registry);
+    
       @override
       List<String> menu() => [$menuItems];
     }
@@ -35,12 +37,13 @@ class BasicFrontendBuilder extends FrontendBuilder {
   }
 
   String _generateMenuItem(ClassElement clazz, ConstantReader frontend) {
-    final icon = frontend
-            .read('icon')
+    final icon = frontend.read('icon');
+    final iconHtml = !icon.isNull
+        ? icon
             .read('name')
             .stringValue
-            .apply((it) => " + sl.icon(sl.Icon.$it, slot: 'prefix')") ??
-        '';
-    return "sl.menuItem('${clazz.name.sentenceCase.plural}'$icon)";
+            .apply((it) => " + sl.icon(sl.Icon.$it, slot: 'prefix')")
+        : '';
+    return "sl.menuItem('${clazz.name.sentenceCase.plural}'$iconHtml)";
   }
 }
