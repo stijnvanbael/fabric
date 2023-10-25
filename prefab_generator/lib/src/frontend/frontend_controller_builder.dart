@@ -1,7 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:fabric_prefab/fabric_prefab.dart';
-import 'package:fabric_prefab_generator/src/util.dart';
 import 'package:logging/logging.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -46,7 +45,7 @@ class FrontendControllerBuilder extends GeneratorForAnnotation<Prefab> {
         null,
       );
       return Response.ok(
-        frontend.page(frontend.list(entities)),
+        frontend.page('${entityName.plural.sentenceCase}', frontend.list(entities)),
         headers: {'content-type': 'text/html'},
       );
     }

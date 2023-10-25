@@ -11,7 +11,7 @@ aside {
     width: calc(var(--sidebar-width) - (2 * var(--sl-spacing-medium)));
     padding: var(--sl-spacing-medium);
     border-right: 1px solid;
-    border-color: var(--sl-color-gray-90);
+    border-color: var(--sl-color-gray-200);
 }
 
 main {
@@ -20,12 +20,10 @@ main {
     max-width: 80rem;
 }
 
-.panel {
-    border: 1px solid;
-    border-color: var(--sl-color-gray-90);
-    border-radius: var(--sl-border-radius-medium);
-    padding: var(--sl-spacing-large);
+sl-card {
+    display: block;
     overflow: auto;
+    margin: var(--sl-spacing-large) 0;
 }
 
 table {
@@ -36,7 +34,7 @@ table {
 
 tr {
     border-bottom: 1px solid;
-    border-color: var(--sl-color-gray-90);
+    border-color: var(--sl-color-gray-200);
 }
 
 td, th {

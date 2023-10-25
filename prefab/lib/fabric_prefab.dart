@@ -10,7 +10,7 @@ export 'package:recase/recase.dart';
 export 'package:shelf/shelf.dart';
 
 export 'src/domain.dart';
-export 'src/frontend/basic.dart';
+export 'src/frontend/basic/template.dart';
 export 'src/metadata.dart';
 export 'src/repository.dart';
 export 'src/util.dart';

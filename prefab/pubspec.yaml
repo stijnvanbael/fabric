@@ -6,13 +6,16 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
+  pluralize: ^0.0.8
   fabric_weaver:
     path: ../weaver
   templatr: #^0.2.0
     path: ../../templatr
   custom_html_elements: #^0.1.0+1
     path: ../../custom_html_elements
-    
+  html: any
+  js_interop: any
+
 dev_dependencies:
   fabric_prefab_generator:
     path: ../prefab_generator

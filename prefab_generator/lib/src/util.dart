@@ -2,7 +2,6 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
 import 'package:fabric_prefab/fabric_prefab.dart';
-import 'package:pluralize/pluralize.dart';
 import 'package:source_gen/source_gen.dart';
 
 extension ElementHasMeta on Element {
@@ -80,10 +79,4 @@ enum Nullability {
   String outputType(VariableElement element) {
     return element.type.getDisplayString(withNullability: _inherit) + _suffix;
   }
-}
-
-extension PluralString on String {
-  static final Pluralize _pluralize = Pluralize();
-
-  String get plural => _pluralize.plural(this);
 }

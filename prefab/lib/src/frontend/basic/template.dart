@@ -6,10 +6,12 @@ import 'package:templatr/shoelace.dart' as sl;
 abstract class BasicFrontendTemplate {
   final Registry registry;
   final dateFormat = DateFormat('dd-MM-yyyy HH:mm');
+  final shoelaceVersion = 'shoelace@2.10.0';
 
   BasicFrontendTemplate(this.registry);
 
-  String page(List<String> content) => h.html(lang: 'en', content: [
+  String page(String title, List<String> content) =>
+      h.html(lang: 'en', content: [
         h.head([
           h.meta(charset: 'utf-8'),
           h.meta(httpEquiv: 'X-UA-Compatible', content: 'IE=edge'),
@@ -21,14 +23,17 @@ abstract class BasicFrontendTemplate {
           h.link(
             rel: h.LinkRel.stylesheet,
             href:
-                'https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.17/dist/shoelace/shoelace.css',
+                'https://cdn.jsdelivr.net/npm/@shoelace-style/$shoelaceVersion/cdn/themes/light.css',
           ),
-          h.link(rel: h.LinkRel.stylesheet, href: '/styles/prefab.css'),
+          h.link(
+              rel: h.LinkRel.stylesheet,
+              href: 'http://localhost:8081/styles/prefab.css'),
           h.script(
             type: 'module',
             src:
-                'https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.17/dist/shoelace/shoelace.esm.js',
+                'https://cdn.jsdelivr.net/npm/@shoelace-style/$shoelaceVersion/cdn/shoelace-autoloader.js',
           ),
+          h.script(src: 'http://localhost:8081/interface.dart.js', defer: true),
         ]),
         h.body([
           h.aside([
@@ -43,8 +48,15 @@ abstract class BasicFrontendTemplate {
   List<String> list<T>(List<T> items) {
     final entity = registry.lookup<T>();
     return [
-      h.h1(entity.name),
-      h.div([
+      h.h1(entity.name.plural),
+      sl.card([
+        sl.button(
+          'Add ${entity.name.sentenceCase.toLowerCase()}',
+          classes: ['add-button'],
+          variant: sl.ButtonVariant.primary,
+        ),
+      ]),
+      sl.card([
         h.table([
           h.thead([
             h.tr(entity.fieldAccessors.keys
@@ -54,9 +66,24 @@ abstract class BasicFrontendTemplate {
           ]),
           h.tbody(items.map((item) => listItem(item, entity)).toList()),
         ]),
-      ], classes: [
-        'panel'
-      ])
+      ]),
+      sl.dialog(
+        label: 'Add ${entity.name.sentenceCase.toLowerCase()}',
+        classes: ['add-dialog'],
+        content: [
+          sl.button(
+            'Cancel',
+            classes: ['cancel'],
+            slot: 'footer',
+          ),
+          sl.button(
+            'Add',
+            variant: sl.ButtonVariant.primary,
+            classes: ['add'],
+            slot: 'footer',
+          ),
+        ],
+      ),
     ];
   }
 

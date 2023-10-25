@@ -65,10 +65,10 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
       ''';
 
   String _mutableUpdate(String entityName, MethodElement method) {
-    logger.warning('Update use case $entityName.${method.name}() does not have'
-        ' $entityName, assuming it modifies the object itself. This is not'
-        ' advised, it is safer to make entities immutable and have use cases'
-        ' return a copy of the entity.');
+    logger.warning('Update use case `$entityName.${method.name}()` does not have'
+        ' `$entityName` as return type, assuming it modifies the object itself.'
+        ' This is not recommended, it is safer to make entities immutable and'
+        ' have use cases return a copy of the entity.');
     return '''
       ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')});
       await repository.save(${entityName.camelCase});

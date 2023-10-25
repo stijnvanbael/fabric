@@ -14,7 +14,7 @@ import 'package:fabric_weaver/src/server/shelf.dart';
 import 'package:hotreloader/hotreloader.dart';
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_static/shelf_static.dart';
+import 'package:shelf_proxy/shelf_proxy.dart';
 import 'package:shutdown/shutdown.dart';
 
 import 'logging/google_cloud_logging.dart';
@@ -113,7 +113,7 @@ class WeaverApplication {
           'server.cors.allowed-origins',
           defaultValue: '',
         ),
-        defaultHandler: createStaticHandler('web'));
+        defaultHandler: proxyHandler('http://localhost:8081'));
     final logEnabled = fabric.getBool(
       'server.log-requests',
       defaultValue: true,
