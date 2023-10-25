@@ -45,3 +45,8 @@ td, th {
 th {
     font-weight: var(--sl-font-weight-semibold);
 }
+
+form sl-input,
+form sl-checkbox {
+    margin: var(--sl-spacing-medium);
+}
