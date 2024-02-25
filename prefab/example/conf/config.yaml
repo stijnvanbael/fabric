@@ -1,9 +1,6 @@
 server:
   port: 8080
 
-controller:
-  message: added
-
 box:
   type: file
   file:

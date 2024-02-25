@@ -134,8 +134,21 @@ abstract class BasicFrontendTemplate {
           type: h.InputType.date,
         ),
       dynamic other => throw ArgumentError('Unsupported type: $other')
+      // _ => _complexFieldInput(field, entity)
     };
   }
+
+  // String _complexFieldInput(String field, EntitySupport<dynamic> entity) {
+  //   final fieldType = entity.simpleFieldTypes[field];
+  //   return switch(fieldType) {
+  //     List =>
+  //         _listInput(
+  //           field: field,
+  //           itemType: entity.fieldTypeParameters[field][0],
+  //         ),
+  //     dynamic other => throw ArgumentError('Unsupported type: $other')
+  //   }
+  // }
 
   List<String> menu();
 

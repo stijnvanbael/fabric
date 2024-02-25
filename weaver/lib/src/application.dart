@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:args/args.dart';
 import 'package:box/box.dart';
 import 'package:box/mongodb.dart';
+import 'package:box/postgres.dart';
 import 'package:cipher_string/cipher_string.dart';
 import 'package:controller/controller.dart';
 import 'package:dio/dio.dart' show Dio;
@@ -154,8 +155,9 @@ class WeaverApplication {
 
   void _parseArguments() {
     var results = argumentParser.parse(arguments);
-    fabric.registerConfig('env', results['env']);
-    fabric.registerConfig('secrets', results['secrets']);
+    for (final option in results.options) {
+      fabric.registerConfig(option, results[option]);
+    }
   }
 
   void _configureBox() {
@@ -176,9 +178,22 @@ class WeaverApplication {
         fabric.registerFactory<Box>((fabric) => MongoDbBox(
             fabric.getString('box.mongodb.connection'), fabric.getInstance()));
         break;
+      case 'postgresql':
+        fabric.registerFactory<Box>((fabric) => PostgresBox(
+              fabric.getString('box.postgresql.hostname'),
+              fabric.getInstance(),
+              port: fabric.getInt('box.postgresql.port'),
+              database: fabric.getString('box.postgresql.database'),
+              username: fabric.getString('box.postgresql.username'),
+              password: fabric.getString('box.postgresql.password'),
+              ssl: fabric.getBool('box.postgresql.ssl', defaultValue: false),
+            ));
       default:
         if (type.isNotEmpty) {
           throw ArgumentError('Unsupported box type: $type');
+        } else {
+          log.info('No value found for config property box.type. '
+              'No database will be available in the application.');
         }
     }
   }

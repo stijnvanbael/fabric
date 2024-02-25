@@ -2,7 +2,6 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:fabric_prefab_generator/src/util.dart';
-import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
 
 class RepositoryBuilder extends GeneratorForAnnotation<Prefab> {
@@ -18,7 +17,10 @@ class RepositoryBuilder extends GeneratorForAnnotation<Prefab> {
     final clazz = element as ClassElement;
     final entityName = element.name;
     final fields = clazz.fields
-        .where((field) => !field.isStatic && !field.isPrivate)
+        .where((field) =>
+            !field.isStatic &&
+            !field.isPrivate &&
+            field.type.convertsToPrimitive)
         .toList();
     final keyField = fields.where((field) => field.hasMeta(Key)).first;
     var keyType = keyField.type.getDisplayString(withNullability: false);

@@ -24,6 +24,7 @@ class ApiControllerBuilder extends GeneratorForAnnotation<Prefab> {
         annotation.objectValue.getField('useCases')!.toSetValue()!;
     final mixins =
         annotation.objectValue.getField('controllerMixins')!.toSetValue()!;
+    final hasFrontend = !annotation.objectValue.getField('frontend')!.isNull;
     final customUseCases =
         clazz.methods.where((element) => element.hasMeta(UseCase)).toList();
     var mixinsClause = mixins.isNotEmpty
@@ -34,11 +35,11 @@ class ApiControllerBuilder extends GeneratorForAnnotation<Prefab> {
     @managed
     class $entityName\$ApiController$mixinsClause {
       final $entityName\$Repository repository;
-      final ApplicationFrontendTemplate frontend;
+      ${hasFrontend ? 'final ApplicationFrontendTemplate frontend;' : ''}
       
       $entityName\$ApiController(
         this.repository,
-        this.frontend,
+        ${hasFrontend ? 'this.frontend,' : ''}
       );
       
       ${standardUseCases.map((useCase) => UseCaseBuilder.controllerMethod(useCase, clazz, clazz)).join('\n\n')}
@@ -53,13 +54,17 @@ class ApiControllerBuilder extends GeneratorForAnnotation<Prefab> {
   }
 
   String _fieldEnum(ClassElement clazz) {
-    final fields = clazz.fields.where(
-        (field) => !field.isStatic && !field.isPrivate && !field.hasMeta(Key));
+    final fields = clazz.fields.where((field) =>
+        !field.isStatic &&
+        !field.isPrivate &&
+        !field.hasMeta(Key) &&
+        field.type.convertsToPrimitive);
+    // TODO: is name really necessary?
     return '''
     enum ${clazz.name.pascalCase}\$Field {
       ${fields.map((f) => f.name).join(',')};
       
-      String get name => toString().substring(toString().indexOf('.') + 1);
+      // String get name => toString().substring(toString().indexOf('.') + 1);
     }
     ''';
   }

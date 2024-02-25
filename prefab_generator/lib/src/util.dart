@@ -23,6 +23,14 @@ extension ElementHasMeta on Element {
 
 extension DartTypeExtensions on DartType {
   bool isType(Type expected) => accept(TypeChecker(expected));
+
+  bool get convertsToPrimitive {
+    return isType(num) ||
+        isType(String) ||
+        isType(bool) ||
+        isType(DateTime) ||
+        isType(Enum);
+  }
 }
 
 extension ClassElementExtensions on ClassElement {

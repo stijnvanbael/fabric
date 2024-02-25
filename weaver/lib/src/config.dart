@@ -7,10 +7,10 @@ final Logger _log = Logger('weaver_config');
 final RegExp _include = RegExp(r'\$include\((.+)\)');
 
 Map<String, String> loadConfig(
-  String configDir,
-  String environment,
-  String secretsPath,
-) {
+  String configDir, [
+  String environment = '',
+  String secretsPath = '',
+]) {
   var dir = _relativeConfigDir(configDir);
   var suffix = environment.isNotEmpty ? '-$environment' : '';
   var config = <String, String>{};
@@ -31,7 +31,7 @@ Map<String, String> _loadConfig(String dir, String name) {
     _log.fine('Config: $flattened');
     return flattened;
   } else {
-    _log.fine('$path not found');
+    _log.warning('No config found on $path');
     return {};
   }
 }

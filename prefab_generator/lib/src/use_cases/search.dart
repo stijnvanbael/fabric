@@ -9,7 +9,10 @@ class SearchBuilder extends UseCaseBuilder<ClassElement, Search> {
     final entityName = clazz.name;
     final fields = clazz.fields
         .where((field) =>
-            !field.isStatic && !field.isPrivate && !field.hasMeta(Key))
+            !field.isStatic &&
+            !field.isPrivate &&
+            !field.hasMeta(Key) &&
+            field.type.convertsToPrimitive)
         .toList();
     return '''
     @Get('/api/${entityName.paramCase.plural}')

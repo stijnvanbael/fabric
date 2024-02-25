@@ -32,8 +32,9 @@ class ManagedObjectGenerator extends MergingGenerator<Definition, Managed> {
       """,
       imports: {
         _pathOf(element.enclosingElement),
-        ...constructorParams.map((param) =>
-            _pathOf(param.type.element!.library!.definingCompilationUnit)),
+        ...constructorParams.map((param) => _pathOf(param
+                .type.element!.library?.definingCompilationUnit ??
+            (throw ArgumentError('Missing library declaration on $param')))),
       },
     );
   }

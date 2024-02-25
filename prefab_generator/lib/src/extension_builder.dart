@@ -31,7 +31,7 @@ class ExtensionBuilder extends GeneratorForAnnotation<Prefab> {
   }
 
   String _paramDeclaration(ParameterElement param) {
-    final type = param.type.element!.name!;
+    final type = param.type.getDisplayString(withNullability: false);
     final name = param.name;
     return '$type? $name';
   }

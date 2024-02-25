@@ -22,7 +22,8 @@ class FrontendBuilderDispatcher
           .entries
           .map((entry) => FrontendBuilder.forName(entry.key)
               .compose(entry.value.map((c) => c.components).toList()))
-          .first;
+          .firstOrNull ??
+      '';
 
   @override
   FrontendComponents? generateStreamItemForAnnotatedElement(

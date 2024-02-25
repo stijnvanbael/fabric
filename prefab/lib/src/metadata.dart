@@ -2,11 +2,13 @@ import 'package:box/box.dart';
 import 'package:controller/controller.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:templatr/shoelace.dart';
+import 'package:uuid/uuid_value.dart';
 
 const Create create = Create();
 const Update update = Update();
 const GetByKey getByKey = GetByKey();
 const Search search = Search();
+const UuidConverter uuidConverter = UuidConverter();
 
 class Prefab extends JsonSerializable implements Entity, Validatable {
   @override
@@ -20,7 +22,7 @@ class Prefab extends JsonSerializable implements Entity, Validatable {
     this.useCases = const {},
     this.controllerMixins = const {},
     this.frontend,
-  });
+  }) : super(converters: const [UuidConverter()]);
 }
 
 class Create extends UseCase {
@@ -59,4 +61,14 @@ class BasicFrontend extends Frontend {
   final Icon? icon;
 
   const BasicFrontend(this.icon) : super('basic');
+}
+
+class UuidConverter extends JsonConverter<UuidValue, String> {
+  const UuidConverter();
+
+  @override
+  UuidValue fromJson(String json) => UuidValue.fromString(json);
+
+  @override
+  String toJson(UuidValue object) => object.toString();
 }
