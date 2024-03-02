@@ -85,14 +85,17 @@ class Fabric {
   int getInt(String key, {int? defaultValue}) =>
       int.parse(getString(key, defaultValue: defaultValue?.toString()));
 
-  int? getOptionalInt(String key) =>
-      getOptionalString(key)?.apply(int.parse);
+  int? getOptionalInt(String key) => getOptionalString(key)?.apply(int.parse);
 
   bool getBool(String key, {bool? defaultValue}) =>
       getString(key, defaultValue: defaultValue?.toString()) == 'true';
 
   bool? getOptionalBool(String key) =>
       getOptionalString(key)?.apply((string) => string == 'true');
+
+  void setBool(String key, bool value) => setString(key, value.toString());
+
+  void setString(String key, String value) => _config[key] = value;
 }
 
 Factory<T> value<T>(T instance) {

@@ -22,19 +22,17 @@ abstract class UseCaseBuilder<E extends Element, T> extends Generator {
     DartObject useCase,
     Element element,
     ClassElement clazz,
-  ) {
-    return _findBuilder(useCase, element, clazz)
-        .generateControllerMethod(element, clazz);
-  }
+  ) =>
+      _findBuilder(useCase, element, clazz)
+          .generateControllerMethod(element, clazz);
 
   static String requestClass(
     DartObject useCase,
     Element element,
     ClassElement clazz,
-  ) {
-    return _findBuilder(useCase, element, clazz)
-        .generateRequestClass(element, clazz);
-  }
+  ) =>
+      _findBuilder(useCase, element, clazz)
+          .generateRequestClass(element, clazz);
 
   static UseCaseBuilder _findBuilder(
       DartObject useCase, Element element, ClassElement clazz) {
@@ -45,7 +43,9 @@ abstract class UseCaseBuilder<E extends Element, T> extends Generator {
       throw ArgumentError(
           'No UseCaseBuilder defined for ${useCase.type?.element?.name}');
     } else {
-      return _useCaseRegistry[type]!;
+      var useCaseBuilder = _useCaseRegistry[type]!;
+      useCaseBuilder._validateElement(element);
+      return useCaseBuilder;
     }
   }
 
@@ -55,4 +55,11 @@ abstract class UseCaseBuilder<E extends Element, T> extends Generator {
   String generateControllerMethod(E element, ClassElement clazz);
 
   String generateRequestClass(E element, ClassElement clazz) => '';
+
+  void _validateElement(Element element) {
+    if (element is! E) {
+      throw ArgumentError(
+          '@$T can only be applied to a $E, was applied to $element');
+    }
+  }
 }

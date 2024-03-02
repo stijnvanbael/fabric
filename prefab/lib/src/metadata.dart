@@ -5,41 +5,43 @@ import 'package:templatr/shoelace.dart';
 import 'package:uuid/uuid_value.dart';
 
 const Create create = Create();
-const Update update = Update();
 const GetByKey getByKey = GetByKey();
+const Update update = Update();
 const Search search = Search();
 const UuidConverter uuidConverter = UuidConverter();
+const Payload requestPayload = Payload(createToJson: false);
 
-class Prefab extends JsonSerializable implements Entity, Validatable {
+class Prefab extends Payload implements Entity {
   @override
   final String? name;
-  final Set<UseCase> useCases;
+  final Set<ClassUseCase> useCases;
   final Set<Type> controllerMixins;
+  final Set<Type> repositoryMixins;
   final Frontend? frontend;
 
   const Prefab({
     this.name,
     this.useCases = const {},
     this.controllerMixins = const {},
+    this.repositoryMixins = const {},
     this.frontend,
-  }) : super(converters: const [UuidConverter()]);
+  });
 }
 
-class Create extends UseCase {
+class Create extends ClassUseCase {
   const Create([HttpRequest request = const Post('')]) : super(request);
 }
 
-class GetByKey extends UseCase {
+class GetByKey extends ClassUseCase {
   const GetByKey([HttpRequest request = const Get('/:id')])
-      : super(request); // Replace :id with key placeholder
+      : super(request); // TODO: Replace :id with key placeholder
 }
 
-class Search extends UseCase {
-  const Search([HttpRequest request = const Get('')])
-      : super(request); // Replace :id with key placeholder
+class Search extends ClassUseCase {
+  const Search([HttpRequest request = const Get('')]) : super(request);
 }
 
-class Update extends UseCase {
+class Update extends MethodUseCase {
   const Update([HttpRequest request = const Put('')]) : super(request);
 }
 
@@ -47,6 +49,14 @@ abstract class UseCase {
   final HttpRequest request;
 
   const UseCase(this.request);
+}
+
+abstract class ClassUseCase extends UseCase {
+  const ClassUseCase(super.request);
+}
+
+abstract class MethodUseCase extends UseCase {
+  const MethodUseCase(super.request);
 }
 
 enum SortDirection { ascending, descending }
@@ -71,4 +81,9 @@ class UuidConverter extends JsonConverter<UuidValue, String> {
 
   @override
   String toJson(UuidValue object) => object.toString();
+}
+
+class Payload extends JsonSerializable implements Validatable {
+  const Payload({bool createToJson = true})
+      : super(createToJson: createToJson, converters: const [uuidConverter]);
 }

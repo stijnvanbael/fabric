@@ -73,12 +73,14 @@ class WeaverApplication {
   }
 
   void _startHttpServer() {
-    var handlers = fabric.getInstances<Handler>();
-    var dispatcherBuilders = fabric.getInstances<DispatcherBuilder>();
-    var handler = handlers.length == 1
+    final handlers = fabric.getInstances<Handler>();
+    final dispatcherBuilders = fabric.getInstances<DispatcherBuilder>();
+    final proxyFrontend =
+        fabric.getBool('server.proxyFrontend', defaultValue: false);
+    final handler = handlers.length == 1
         ? handlers.first
         : (dispatcherBuilders.isNotEmpty
-            ? _createRequestHandler(dispatcherBuilders.toList())
+            ? _createRequestHandler(dispatcherBuilders.toList(), proxyFrontend)
             : null);
     if (handler != null) {
       fabric.registerInstance(RequestHandler(handler));
@@ -107,14 +109,21 @@ class WeaverApplication {
     }
   }
 
-  Handler _createRequestHandler(List<DispatcherBuilder> dispatcherBuilders) {
-    var dispatcher = createRequestDispatcher(dispatcherBuilders,
-        corsEnabled: fabric.getBool('server.cors.enabled', defaultValue: false),
-        allowedOrigins: fabric.getString(
-          'server.cors.allowed-origins',
-          defaultValue: '',
-        ),
-        defaultHandler: proxyHandler('http://localhost:8081'));
+  Handler _createRequestHandler(
+    List<DispatcherBuilder> dispatcherBuilders,
+    bool proxyFrontend,
+  ) {
+    var dispatcher = createRequestDispatcher(
+      dispatcherBuilders,
+      corsEnabled: fabric.getBool('server.cors.enabled', defaultValue: false),
+      allowedOrigins: fabric.getString(
+        'server.cors.allowed-origins',
+        defaultValue: '',
+      ),
+      defaultHandler: proxyFrontend
+          ? proxyHandler('http://localhost:8081')
+          : defaultHandler,
+    );
     final logEnabled = fabric.getBool(
       'server.log-requests',
       defaultValue: true,

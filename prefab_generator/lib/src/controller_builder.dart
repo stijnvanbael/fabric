@@ -59,12 +59,9 @@ class ApiControllerBuilder extends GeneratorForAnnotation<Prefab> {
         !field.isPrivate &&
         !field.hasMeta(Key) &&
         field.type.convertsToPrimitive);
-    // TODO: is name really necessary?
     return '''
     enum ${clazz.name.pascalCase}\$Field {
       ${fields.map((f) => f.name).join(',')};
-      
-      // String get name => toString().substring(toString().indexOf('.') + 1);
     }
     ''';
   }

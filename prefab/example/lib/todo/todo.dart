@@ -1,5 +1,4 @@
 import 'package:fabric_prefab/fabric_prefab.dart';
-import 'package:templatr/shoelace.dart';
 
 import '../prefab_frontend.g.dart';
 

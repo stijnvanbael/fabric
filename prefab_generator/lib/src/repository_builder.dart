@@ -22,26 +22,31 @@ class RepositoryBuilder extends GeneratorForAnnotation<Prefab> {
             !field.isPrivate &&
             field.type.convertsToPrimitive)
         .toList();
+    final mixins =
+        annotation.objectValue.getField('repositoryMixins')!.toSetValue()!;
     final keyField = fields.where((field) => field.hasMeta(Key)).first;
     var keyType = keyField.type.getDisplayString(withNullability: false);
     var nonKeyFields = fields.where((f) => !f.hasMeta(Key));
+    var mixinsClause = mixins.isNotEmpty
+        ? ' with ${mixins.map((mixin) => mixin.toTypeValue()!.element!.name).join(',')}'
+        : '';
     return '''
     @managed
-    class $entityName\$Repository {
-      final Box _box;
+    class $entityName\$Repository$mixinsClause {
+      final Box box;
     
-      $entityName\$Repository(this._box);
+      $entityName\$Repository(this.box);
     
-      Future<$keyType> save($entityName ${entityName.camelCase}) => _box.store(${entityName.camelCase});
+      Future<$keyType> save($entityName ${entityName.camelCase}) => box.store(${entityName.camelCase});
     
-      Future<$entityName?> findBy${keyField.name.pascalCase}($keyType ${keyField.name}) => _box.find<$entityName>(${keyField.name});
+      Future<$entityName?> findBy${keyField.name.pascalCase}($keyType ${keyField.name}) => box.find<$entityName>(${keyField.name});
       
       Future<List<$entityName>> search(
       ${entityName.pascalCase}\$Field? orderBy,
       SortDirection direction,
       ${nonKeyFields.map((f) => _parameter(f, Nullability.nullable)).join(',')}
       ) =>
-        _box
+        box
           .selectFrom<$entityName>()
           .filterWith(${entityName.pascalCase}\$Field.values, [${nonKeyFields.map((f) => f.name).join(',')}])
           .orderByWith(orderBy, direction)

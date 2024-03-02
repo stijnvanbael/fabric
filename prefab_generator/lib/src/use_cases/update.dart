@@ -44,14 +44,13 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
     final requestName =
         '${entityName.pascalCase}\$${element.name.pascalCase}Request';
     return '''
-    @JsonSerializable(createToJson: false)
-    @validatable
+    @requestPayload
     class $requestName {
       ${element.parameters.map(_parameter).map((p) => '$p;').join('\n')}
       
-      $requestName(
-        ${element.parameters.map((p) => 'this.${p.name},').join('\n')}
-      );
+      $requestName({
+        ${element.parameters.map((p) => '${p.isRequired ? 'required ' : ''}this.${p.name},').join('\n')}
+      });
       
       static $requestName fromJson(Map<String, dynamic> json) => _\$${requestName}FromJson(json);
     }
@@ -59,18 +58,19 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
   }
 
   String _immutableUpdate(String entityName, MethodElement method) => '''
-      final updated = ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')});
+      final updated = ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')},);
       await repository.save(updated);
       return Response.ok(jsonEncode(updated.toJson()));
       ''';
 
   String _mutableUpdate(String entityName, MethodElement method) {
-    logger.warning('Update use case `$entityName.${method.name}()` does not have'
+    logger.warning(
+        'Update use case `$entityName.${method.name}()` does not have'
         ' `$entityName` as return type, assuming it modifies the object itself.'
         ' This is not recommended, it is safer to make entities immutable and'
         ' have use cases return a copy of the entity.');
     return '''
-      ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')});
+      ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')},);
       await repository.save(${entityName.camelCase});
       return Response.ok(jsonEncode(${entityName.camelCase}.toJson()));
       ''';
@@ -82,6 +82,8 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
   ]) =>
       '${nullability.outputType(parameter)} ${parameter.name}';
 
-  String _arguments(List<VariableElement> variables, [String prefix = '']) =>
-      variables.map((variable) => prefix + variable.name).join(', ');
+  String _arguments(List<ParameterElement> parameters, [String prefix = '']) =>
+      parameters
+          .map((p) => (p.isNamed ? '${p.name}: ' : '') + prefix + p.name)
+          .join(', ');
 }
