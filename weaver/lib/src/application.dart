@@ -31,14 +31,14 @@ class WeaverApplication {
   final Map<Spec, Factory> factories;
   final String configDir;
   final List<String> arguments;
-  final HotReloader? reloader;
+  final Future<HotReloader?> reloader;
 
   WeaverApplication(
     this.fabric, {
     this.factories = const {},
     required this.configDir,
     this.arguments = const [],
-    this.reloader,
+    required this.reloader,
   }) {
     _configureDefaults();
     _parseArguments();
@@ -55,10 +55,9 @@ class WeaverApplication {
   }
 
   void _configureFabric() {
+    print('Loading configuration ...');
     var environment = fabric.getString('env');
     var secretsPath = fabric.getString('secrets');
-    log.info(
-        'Starting application for environment ${environment.isNotEmpty ? environment : 'default'}');
     var config = <String, String>{};
     if (environment.isNotEmpty) {
       config = loadConfig(configDir, '', secretsPath);
@@ -73,6 +72,7 @@ class WeaverApplication {
   }
 
   void _startHttpServer() {
+    log.info('Starting HTTP server ...');
     final handlers = fabric.getInstances<Handler>();
     final dispatcherBuilders = fabric.getInstances<DispatcherBuilder>();
     final proxyFrontend =
@@ -92,13 +92,13 @@ class WeaverApplication {
           case 'shelf':
             ShelfWeaverServer(
               handler: handler,
-              port: fabric.getInt('server.port'),
+              port: fabric.getInt('server.port', defaultValue: 8080),
             ).start();
             break;
           case 'google-cloud-functions':
             GoogleCloudFunctionsServer(
               handler: handler,
-              port: fabric.getInt('server.port'),
+              port: fabric.getInt('server.port', defaultValue: 8080),
             ).start();
             break;
           default:
@@ -146,6 +146,7 @@ class WeaverApplication {
   }
 
   void _configureLogging() {
+    print('Configuring logging ...');
     final googleCloudLoggingEnabled = fabric.getBool(
       'google-cloud.logging.enabled',
       defaultValue: false,
@@ -170,7 +171,8 @@ class WeaverApplication {
   }
 
   void _configureBox() {
-    var type = fabric.getString('box.type', defaultValue: '');
+    var type = fabric.getString('box.type', defaultValue: 'memory');
+    log.info('Configuring database of type $type');
     switch (type) {
       case 'memory':
         fabric.registerFactory<Box>(
@@ -179,22 +181,29 @@ class WeaverApplication {
         break;
       case 'file':
         fabric.registerFactory<Box>(
-          (fabric) =>
-              FileBox(fabric.getString('box.file.path'), fabric.getInstance()),
+          (fabric) => FileBox(
+              fabric.getString('box.file.path', defaultValue: '.data'),
+              fabric.getInstance()),
         );
         break;
       case 'mongodb':
         fabric.registerFactory<Box>((fabric) => MongoDbBox(
-            fabric.getString('box.mongodb.connection'), fabric.getInstance()));
+            fabric.getString('box.mongodb.connection',
+                defaultValue: 'mongodb://localhost:27017'),
+            fabric.getInstance()));
         break;
       case 'postgresql':
         fabric.registerFactory<Box>((fabric) => PostgresBox(
-              fabric.getString('box.postgresql.hostname'),
+              fabric.getString('box.postgresql.hostname',
+                  defaultValue: 'localhost'),
               fabric.getInstance(),
-              port: fabric.getInt('box.postgresql.port'),
-              database: fabric.getString('box.postgresql.database'),
-              username: fabric.getString('box.postgresql.username'),
-              password: fabric.getString('box.postgresql.password'),
+              port: fabric.getInt('box.postgresql.port', defaultValue: 5432),
+              database: fabric.getString('box.postgresql.database',
+                  defaultValue: 'postgres'),
+              username: fabric.getString('box.postgresql.username',
+                  defaultValue: 'postgres'),
+              password: fabric.getString('box.postgresql.password',
+                  defaultValue: 'postgres'),
               ssl: fabric.getBool('box.postgresql.ssl', defaultValue: false),
             ));
       default:
@@ -210,6 +219,7 @@ class WeaverApplication {
   void _configureSecurity() {
     final issuerUri = fabric.getString('security.issuer-uri', defaultValue: '');
     if (issuerUri.isNotEmpty) {
+      log.info('Configuring security with issuer URI $issuerUri');
       fabric.registerInstance<Security>(JwtSecurity(
         issuerUri: Uri.parse(issuerUri),
         clientId: fabric.getString('security.client-id'),
@@ -227,7 +237,7 @@ class WeaverApplication {
   }
 
   void _registerShutdownHook() {
-    addHandler(() => reloader?.stop());
+    addHandler(() async => (await reloader)?.stop());
   }
 }
 

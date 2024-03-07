@@ -18,6 +18,10 @@ class ApiControllerBuilder extends GeneratorForAnnotation<Prefab> {
     if (element.kind != ElementKind.CLASS) {
       throw '@Prefab can only be used on a class, found on $element';
     }
+    final useCases = annotation.objectValue.getField('useCases')!.toSetValue()!;
+    if (useCases.isEmpty) {
+      return '';
+    }
     final clazz = element as ClassElement;
     final entityName = clazz.name;
     final standardUseCases =

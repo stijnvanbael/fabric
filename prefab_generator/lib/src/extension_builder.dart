@@ -11,24 +11,29 @@ class ExtensionBuilder extends GeneratorForAnnotation<Prefab> {
     BuildStep buildStep,
   ) {
     _verifyIsClass(element);
+    final abstract =
+        annotation.objectValue.getField('abstract')!.toBoolValue()!;
     final params = element.children
         .whereType<ConstructorElement>()
         .map((constructor) => constructor.parameters)
         .first;
-    final entityName = element.name;
+    final entityName = element.name!;
     return '''
     extension $entityName\$Prefab on $entityName {
-      $entityName copy({
-        ${params.map(_paramDeclaration).join(',')}
-      }) =>
-          $entityName(
-            ${params.map(_constructorParam).join(',')}
-          );
+      ${!abstract ? _copy(entityName, params) : ''}
           
       Map<String, dynamic> toJson() => _\$${entityName}ToJson(this);
     }
     ''';
   }
+
+  String _copy(String entityName, List<ParameterElement> params) => '''
+    $entityName copy({
+      ${params.map(_paramDeclaration).join(',')}
+    }) => $entityName(
+      ${params.map(_constructorParam).join(',')}
+    );
+    ''';
 
   String _paramDeclaration(ParameterElement param) {
     final type = param.type.getDisplayString(withNullability: false);

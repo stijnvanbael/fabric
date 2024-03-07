@@ -9,23 +9,27 @@ const GetByKey getByKey = GetByKey();
 const Update update = Update();
 const Search search = Search();
 const UuidConverter uuidConverter = UuidConverter();
-const Payload requestPayload = Payload(createToJson: false);
+const Payload requestPayload = Payload(createFactory: true);
 
 class Prefab extends Payload implements Entity {
   @override
   final String? name;
+  final String baseUrl;
   final Set<ClassUseCase> useCases;
   final Set<Type> controllerMixins;
   final Set<Type> repositoryMixins;
   final Frontend? frontend;
+  final bool abstract;
 
   const Prefab({
     this.name,
+    this.baseUrl = '/#entity',
     this.useCases = const {},
     this.controllerMixins = const {},
     this.repositoryMixins = const {},
     this.frontend,
-  });
+    this.abstract = false,
+  }) : super(createToJson: true, createFactory: !abstract);
 }
 
 class Create extends ClassUseCase {
@@ -84,6 +88,12 @@ class UuidConverter extends JsonConverter<UuidValue, String> {
 }
 
 class Payload extends JsonSerializable implements Validatable {
-  const Payload({bool createToJson = true})
-      : super(createToJson: createToJson, converters: const [uuidConverter]);
+  const Payload({
+    bool createToJson = true,
+    bool createFactory = false,
+  }) : super(
+          createToJson: createToJson,
+          createFactory: createFactory,
+          converters: const [uuidConverter],
+        );
 }

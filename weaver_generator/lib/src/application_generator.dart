@@ -28,7 +28,7 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
         String configDir = '$folder/conf',
         List<String> arguments = const [],
       }) async {
-        final reloader = await enableHotReload();
+        final reloader = enableHotReload();
         final fabric = createFabric();
         registerDispatcherBuilders(fabric);
         registerBox(fabric);
@@ -45,8 +45,8 @@ class ApplicationGenerator extends MergingGenerator<dynamic, PackageDir> {
   }
 
   @override
-  generateStreamItemForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) {
+  generateStreamItemForAnnotatedElement(Element element,
+      ConstantReader annotation, BuildStep buildStep) {
     return null;
   }
 }

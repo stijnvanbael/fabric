@@ -6,13 +6,17 @@ import 'package:source_gen/source_gen.dart';
 
 class RepositoryBuilder extends GeneratorForAnnotation<Prefab> {
   @override
-  generateForAnnotatedElement(
+  String generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
     if (element.kind != ElementKind.CLASS) {
       throw 'ERROR: @Prefab can only be used on a class, found on $element';
+    }
+    final useCases = annotation.objectValue.getField('useCases')!.toSetValue()!;
+    if (useCases.isEmpty) {
+      return '';
     }
     final clazz = element as ClassElement;
     final entityName = element.name;
@@ -39,7 +43,7 @@ class RepositoryBuilder extends GeneratorForAnnotation<Prefab> {
     
       Future<$keyType> save($entityName ${entityName.camelCase}) => box.store(${entityName.camelCase});
     
-      Future<$entityName?> findBy${keyField.name.pascalCase}($keyType ${keyField.name}) => box.find<$entityName>(${keyField.name});
+      Future<$entityName?> findBy${keyField.name.pascalCase}($keyType ${keyField.name}) => box.find<$entityName>(${keyField.name}${keyType == 'UuidValue' ? '.toString()' : ''});
       
       Future<List<$entityName>> search(
       ${entityName.pascalCase}\$Field? orderBy,

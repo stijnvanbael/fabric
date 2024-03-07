@@ -58,7 +58,7 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
   }
 
   String _immutableUpdate(String entityName, MethodElement method) => '''
-      final updated = ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')},);
+      final updated = ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')});
       await repository.save(updated);
       return Response.ok(jsonEncode(updated.toJson()));
       ''';
@@ -70,7 +70,7 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
         ' This is not recommended, it is safer to make entities immutable and'
         ' have use cases return a copy of the entity.');
     return '''
-      ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')},);
+      ${entityName.camelCase}.${method.name}(${_arguments(method.parameters, 'request.')});
       await repository.save(${entityName.camelCase});
       return Response.ok(jsonEncode(${entityName.camelCase}.toJson()));
       ''';

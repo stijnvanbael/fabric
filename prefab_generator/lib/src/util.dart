@@ -3,6 +3,7 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_visitor.dart';
 import 'package:fabric_prefab/fabric_prefab.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:uuid/uuid.dart';
 
 extension ElementHasMeta on Element {
   bool hasMeta(Type meta) => metadata
@@ -29,7 +30,8 @@ extension DartTypeExtensions on DartType {
         isType(String) ||
         isType(bool) ||
         isType(DateTime) ||
-        isType(Enum);
+        isType(Enum) ||
+        isType(UuidValue);
   }
 }
 
