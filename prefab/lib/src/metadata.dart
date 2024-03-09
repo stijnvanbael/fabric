@@ -8,6 +8,7 @@ const Create create = Create();
 const GetByKey getByKey = GetByKey();
 const Update update = Update();
 const Search search = Search();
+const DeleteByKey deleteByKey = DeleteByKey();
 const UuidConverter uuidConverter = UuidConverter();
 const Payload requestPayload = Payload(createFactory: true);
 
@@ -29,7 +30,7 @@ class Prefab extends Payload implements Entity {
     this.repositoryMixins = const {},
     this.frontend,
     this.abstract = false,
-  }) : super(createToJson: true, createFactory: !abstract);
+  }) : super(createToJson: !abstract, createFactory: !abstract);
 }
 
 class Create extends ClassUseCase {
@@ -43,6 +44,11 @@ class GetByKey extends ClassUseCase {
 
 class Search extends ClassUseCase {
   const Search([HttpRequest request = const Get('')]) : super(request);
+}
+
+class DeleteByKey extends ClassUseCase {
+  const DeleteByKey([HttpRequest request = const Delete('/:id')])
+      : super(request); // TODO: Replace :id with key placeholder
 }
 
 class Update extends MethodUseCase {

@@ -55,6 +55,9 @@ class RepositoryBuilder extends GeneratorForAnnotation<Prefab> {
           .filterWith(${entityName.pascalCase}\$Field.values, [${nonKeyFields.map((f) => f.name).join(',')}])
           .orderByWith(orderBy, direction)
           .list();
+      
+      Future<int> deleteBy${keyField.name.pascalCase}($keyType ${keyField.name}) =>
+          box.deleteFrom<$entityName>().where('${keyField.name}').equals(${keyField.name}${keyType == 'UuidValue' ? '.toString()' : ''}).execute();
     }
     '''; // TODO: query fields
   }

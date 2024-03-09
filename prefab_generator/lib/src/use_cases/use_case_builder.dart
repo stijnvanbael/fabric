@@ -2,6 +2,7 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:fabric_prefab_generator/src/use_cases/create.dart';
+import 'package:fabric_prefab_generator/src/use_cases/delete_by_key.dart';
 import 'package:fabric_prefab_generator/src/use_cases/get_by_key.dart';
 import 'package:fabric_prefab_generator/src/use_cases/search.dart';
 import 'package:fabric_prefab_generator/src/use_cases/update.dart';
@@ -15,8 +16,13 @@ abstract class UseCaseBuilder<E extends Element, T> extends Generator {
     _useCaseRegistry[T] = this;
   }
 
-  static List<Generator> get defaults =>
-      [CreateBuilder(), GetByKeyBuilder(), SearchBuilder(), UpdateBuilder()];
+  static List<Generator> get defaults => [
+        CreateBuilder(),
+        GetByKeyBuilder(),
+        SearchBuilder(),
+        UpdateBuilder(),
+        DeleteByKeyBuilder(),
+      ];
 
   static String controllerMethod(
     DartObject useCase,

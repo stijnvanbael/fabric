@@ -28,7 +28,7 @@ class UpdateBuilder extends UseCaseBuilder<MethodElement, Update> {
     Future<Response> ${element.name}(${_parameter(keyField)}$requestBody) async {
       final ${entityName.camelCase} = await repository.findBy${keyField.name.pascalCase}(${keyField.name});
       if (${entityName.camelCase} == null) {
-        return Response.notFound("No ${entityName.sentenceCase.toLowerCase()} found with ${keyField.name} \$${keyField.name}");
+        return Response.notFound('No ${entityName.sentenceCase.toLowerCase()} found with ${keyField.name} \$${keyField.name}');
       }
       $update
     }

@@ -13,6 +13,7 @@ class ExtensionBuilder extends GeneratorForAnnotation<Prefab> {
     _verifyIsClass(element);
     final abstract =
         annotation.objectValue.getField('abstract')!.toBoolValue()!;
+    if (abstract) return '';
     final params = element.children
         .whereType<ConstructorElement>()
         .map((constructor) => constructor.parameters)
@@ -20,7 +21,7 @@ class ExtensionBuilder extends GeneratorForAnnotation<Prefab> {
     final entityName = element.name!;
     return '''
     extension $entityName\$Prefab on $entityName {
-      ${!abstract ? _copy(entityName, params) : ''}
+      ${_copy(entityName, params)}
           
       Map<String, dynamic> toJson() => _\$${entityName}ToJson(this);
     }
